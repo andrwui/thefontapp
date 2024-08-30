@@ -1,0 +1,10 @@
+@import url("./assets/fonts/Inter/stylesheet.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  @apply bg-neutral-950 text-neutral-200 font-inter
+}
