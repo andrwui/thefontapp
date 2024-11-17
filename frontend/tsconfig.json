@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "paths": {
+      "go/*": [
+        "../wailsjs/go/*"
+      ],
+      "runtime/*": [
+        "../wailsjs/runtime/*"
+      ]
+    },
     "baseUrl": "./src",
     "target": "ESNext",
     "useDefineForClassFields": true,

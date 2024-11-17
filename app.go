@@ -3,14 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"slices"
 	"strings"
 
 	"golang.org/x/image/font/sfnt"
+
+	"thefontapp/models"
 )
 
 type App struct {
@@ -25,22 +27,7 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-type FontVariant struct {
-	VariantName string `json:"name"`
-	familyName  string
-	Path        string `json:"path"`
-	Readonly    bool   `json:"readonly"`
-}
-
-type FontFamily struct {
-	Name                   string        `json:"name"`
-	Variants               []FontVariant `json:"variants"`
-	AvailableWeights       []int         `json:"availableWeights"`
-	AvailableItalicWeights []int         `json:"availableItalicWeights"`
-	HasReadonly            bool          `json:"hasReadonly"`
-}
-
-func (a *App) GetFonts() []FontFamily {
+func (a *App) GetFonts() []models.FontFamily {
 	fontDirs := []string{
 		"/usr/share/fonts",
 		"/usr/local/share/fonts",
@@ -50,13 +37,13 @@ func (a *App) GetFonts() []FontFamily {
 
 	fontVariants := findFonts(fontDirs)
 
-	fontFamilyMap := make(map[string][]FontVariant)
+	fontFamilyMap := make(map[string][]models.FontVariant)
 
 	for _, font := range fontVariants {
-		fontFamilyMap[font.familyName] = append(fontFamilyMap[font.familyName], font)
+		fontFamilyMap[font.FamilyName] = append(fontFamilyMap[font.FamilyName], font)
 	}
 
-	var fontFamilies []FontFamily
+	var fontFamilies []models.FontFamily
 	for familyName, variants := range fontFamilyMap {
 
 		hasReadonly := false
@@ -116,7 +103,6 @@ func (a *App) GetFonts() []FontFamily {
 		var availableItalicWeights []int
 		for _, variant := range variants {
 			variantName := strings.ToLower(variant.VariantName)
-			fmt.Printf("Font name: %s, Variant name: %s\n", variant.familyName, variantName)
 
 			val, ok := weights[variantName]
 
@@ -129,7 +115,7 @@ func (a *App) GetFonts() []FontFamily {
 
 		}
 		slices.Sort(availableWeights)
-		fontFamilies = append(fontFamilies, FontFamily{
+		fontFamilies = append(fontFamilies, models.FontFamily{
 			Name:                   familyName,
 			Variants:               variants,
 			AvailableWeights:       slices.Compact(availableWeights),
@@ -141,8 +127,8 @@ func (a *App) GetFonts() []FontFamily {
 	return fontFamilies
 }
 
-func findFonts(dirs []string) []FontVariant {
-	var fonts []FontVariant
+func findFonts(dirs []string) []models.FontVariant {
+	var fonts []models.FontVariant
 	for _, dir := range dirs {
 		dir = expandHomeDir(dir)
 		err := filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
@@ -173,79 +159,89 @@ func expandHomeDir(path string) string {
 	return path
 }
 
-func parseFont(path string) (FontVariant, error) {
+func parseFont(path string) (models.FontVariant, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return FontVariant{}, err
+		return models.FontVariant{}, err
 	}
 	defer file.Close()
 
 	stat, err := file.Stat()
 	if err != nil {
-		return FontVariant{}, err
+		return models.FontVariant{}, err
 	}
 
 	if stat.IsDir() {
-		return FontVariant{}, fmt.Errorf("not a font file")
+		return models.FontVariant{}, fmt.Errorf("not a font file")
 	}
 
 	data := make([]byte, stat.Size())
 	if _, err := file.Read(data); err != nil {
-		return FontVariant{}, err
+		return models.FontVariant{}, err
 	}
 
-	font, err := sfnt.Parse(data)
+	fnt, err := sfnt.Parse(data)
 	if err != nil {
-		return FontVariant{}, err
+		return models.FontVariant{}, err
 	}
 
-	family, err := font.Name(nil, sfnt.NameIDFamily)
+	family, err := fnt.Name(nil, sfnt.NameIDFamily)
 	if err != nil {
-		return FontVariant{}, err
+		return models.FontVariant{}, err
 	}
 
-	subfamily, err := font.Name(nil, sfnt.NameIDSubfamily)
+	subfamily, err := fnt.Name(nil, sfnt.NameIDSubfamily)
 	if err != nil {
-		return FontVariant{}, err
+		return models.FontVariant{}, err
 	}
 
-	return FontVariant{
+	return models.FontVariant{
 		VariantName: string(subfamily),
-		familyName:  string(family),
+		FamilyName:  string(family),
 		Path:        path,
 		Readonly:    strings.HasPrefix(path, "/usr/"),
 	}, nil
 }
 
-func (a *App) DeleteFamily(f FontFamily) error {
+func (a *App) DeleteFamily(f models.FontFamily) error {
 
-	var paths []string
-
-	for _, v := range f.Variants {
-		paths = append(paths, v.Path)
-	}
-
-	if f.HasReadonly {
-
-		args := []string{"rm"}
-		args = append(args, paths...)
-
-		cmd := exec.Command("pkexec", args...)
-
-		if output, err := cmd.CombinedOutput(); err != nil {
-			return fmt.Errorf("pkexec error: %s, %w", string(output), err)
+	for _, p := range f.Variants {
+		fmt.Printf("%s %s %s\n", "[LOG]", "Deleting file:", p.Path)
+		err := os.Remove(p.Path)
+		if err != nil {
+			fmt.Println(err)
+			return err
 		}
-	} else {
-
-		for _, p := range paths {
-			err := os.Remove(p)
-			if err != nil {
-				fmt.Println(err)
-				return err
-			}
-		}
-
 	}
 
 	return nil
+}
+
+func (a *App) InstallFont(path string) {
+	var fontsPath = expandHomeDir("~/.local/share/fonts")
+	var fileName = filepath.Base(path)
+	var destPath = filepath.Join(fontsPath, fileName)
+
+	fmt.Println(destPath)
+
+	inputFile, err := os.Open(path)
+
+	if err != nil {
+		panic(err)
+	}
+	defer inputFile.Close()
+
+	outputFile, err := os.Create(destPath)
+	if err != nil {
+		panic(err)
+	}
+	defer outputFile.Close()
+
+	_, err = io.Copy(outputFile, inputFile)
+	if err != nil {
+		panic(err)
+	}
+
+	inputFile.Close()
+
 }

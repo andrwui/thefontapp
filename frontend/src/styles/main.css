@@ -1,0 +1,17 @@
+@import url("../assets/fonts/manrope/manrope.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  @apply bg-neutral-50 text-neutral-950 select-none
+}
+
+body * {
+  font-size: 18px;
+  font-family: Manrope;
+  @apply tracking-tight;
+  @apply border-neutral-950
+}

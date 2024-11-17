@@ -9,3 +9,7 @@ export function DeleteFamily(arg1) {
 export function GetFonts() {
   return window['go']['main']['App']['GetFonts']();
 }
+
+export function InstallFont(arg1) {
+  return window['go']['main']['App']['InstallFont'](arg1);
+}

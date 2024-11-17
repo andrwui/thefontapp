@@ -1,4 +1,4 @@
-export namespace main {
+export namespace models {
 	
 	export class FontVariant {
 	    name: string;
@@ -17,6 +17,7 @@ export namespace main {
 	    }
 	}
 	export class FontFamily {
+	    id: number;
 	    name: string;
 	    variants: FontVariant[];
 	    availableWeights: number[];
@@ -29,6 +30,7 @@ export namespace main {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
 	        this.name = source["name"];
 	        this.variants = this.convertValues(source["variants"], FontVariant);
 	        this.availableWeights = source["availableWeights"];
