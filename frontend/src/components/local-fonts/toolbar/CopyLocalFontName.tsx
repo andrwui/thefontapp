@@ -1,7 +1,7 @@
 import CopyItem from 'assets/icons/clipboard.svg?react'
 import { models } from 'go/models'
 
-const CopyFontName = ({ font }: { font: models.FontFamily }) => {
+const CopyLocalFontName = ({ font }: { font: models.FontFamily }) => {
   return (
     <CopyItem
       className="size-4 hover:cursor-pointer"
@@ -10,4 +10,4 @@ const CopyFontName = ({ font }: { font: models.FontFamily }) => {
   )
 }
 
-export default CopyFontName
+export default CopyLocalFontName

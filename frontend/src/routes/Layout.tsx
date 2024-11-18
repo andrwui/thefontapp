@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Browse from './routes/Browse'
-import Navigation from './sidebar/navigation/Navigation'
-import SearchBar from './header/SearchBar'
-import AppName from './header/AppName'
+import Local from 'routes/Local'
+import Navigation from 'layout/sidebar/navigation/Navigation'
+import SearchBar from 'layout/header/SearchBar'
+import AppName from 'layout/header/AppName'
 
 const Layout = () => {
   return (
@@ -16,13 +16,13 @@ const Layout = () => {
           element={
             <Navigate
               replace
-              to="/browse"
+              to="/local"
             />
           }
         />
         <Route
-          path="/browse"
-          element={<Browse />}
+          path="/local"
+          element={<Local />}
         />
       </Routes>
     </div>

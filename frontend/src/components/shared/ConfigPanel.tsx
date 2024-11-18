@@ -14,7 +14,6 @@ import AlignLeftIcon from 'assets/icons/align_left.svg?react'
 import AlignCenterIcon from 'assets/icons/align_center.svg?react'
 import AlignRightIcon from 'assets/icons/align_right.svg?react'
 
-import CancelIcon from 'assets/icons/cross.svg?react'
 import CyclerButton from 'components/common/CyclerButton'
 import { ChangeEvent } from 'react'
 import BigInput from 'components/common/BigInput'
@@ -83,7 +82,7 @@ const ConfigPanel = () => {
           value={[fontSize]}
           onValueChange={v => setFontSize(v[0])}
           min={60}
-          max={120}
+          max={180}
           step={5}
         />
         <Slider

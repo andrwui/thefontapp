@@ -4,7 +4,7 @@ import { models } from 'go/models'
 import useFontSettingsStore from 'stores/useFontSettingsStore'
 import StyleNotAvailableIcon from 'assets/icons/warning.svg?react'
 
-const FontDisplay = ({ font }: { font: models.FontFamily }) => {
+const LocalFontDisplay = ({ font }: { font: models.FontFamily }) => {
   const { previewText, fontSize, fontWeight, letterSpacing, fontItalic, textAlign } =
     useFontSettingsStore()
 
@@ -68,9 +68,9 @@ const FontDisplay = ({ font }: { font: models.FontFamily }) => {
         ? 'justify-center'
         : 'justify-end'
   return (
-    <div className={`h-f wull-full flex items-center gap-5 ${itemAlign}`}>
+    <div className={`flex items-center gap-5 ${itemAlign}`}>
       <input
-        className={`text-neutral-950 bg-transparent cursor-default order-2 w-full`}
+        className={`text-neutral-950 bg-transparent order-2 outline-none w-full transition-[outline] duration-200 focus:outline-neutral-950 hover:outline-neutral-950 outline-1 outline-offset-[-1px] cursor-text px-2`}
         onChange={handleInputChange}
         onBlur={handleInputBlur}
         value={displayText}
@@ -79,7 +79,6 @@ const FontDisplay = ({ font }: { font: models.FontFamily }) => {
           fontSize: `${fontSize}px`,
           letterSpacing: `${letterSpacing}em`,
           fontWeight: `${fontWeight}`,
-          lineHeight: ` ${fontSize}px`,
           fontStyle: `${fontItalic ? 'italic' : ''}`,
           textAlign: `${textAlign}`,
         }}
@@ -94,4 +93,4 @@ const FontDisplay = ({ font }: { font: models.FontFamily }) => {
   )
 }
 
-export default FontDisplay
+export default LocalFontDisplay

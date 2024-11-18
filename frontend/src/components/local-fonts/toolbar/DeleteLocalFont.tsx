@@ -12,7 +12,7 @@ type DeleteFontProps = {
   font: models.FontFamily
 }
 
-const DeleteFont = ({ font }: DeleteFontProps) => {
+const DeleteLocalFont = ({ font }: DeleteFontProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const { getLocalFonts } = useLocalFontStore()
@@ -58,4 +58,4 @@ const DeleteFont = ({ font }: DeleteFontProps) => {
   )
 }
 
-export default DeleteFont
+export default DeleteLocalFont

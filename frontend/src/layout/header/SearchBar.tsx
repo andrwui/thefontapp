@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent, useState } from 'react'
-import useSearchStore from '../../stores/useSearchStore'
+import { ChangeEvent } from 'react'
+import useSearchStore from 'stores/useSearchStore'
 import SearchIcon from 'assets/icons/magnifying_glass.svg?react'
 import BigInput from 'components/common/BigInput'
 

@@ -18,14 +18,14 @@ const NavigationLink = ({
   return (
     <Link
       to={to}
-      className={`group w-full h-8 text-lg flex gap-3 px-2 rounded-sm items-center justify-start font-medium origin-left transition-colors duration-100
-        ${isCurrentLocation ? 'bg-neutral-900 text-neutral-50 font-bold' : 'text-neutral-600 hover:text-neutral-950'}
+      className={`group w-full h-8 text-lg flex gap-3 px-5 py-5 items-center justify-start font-medium origin-left transition-colors duration-100 border-b
+        ${isCurrentLocation ? 'bg-neutral-900 text-neutral-50 font-bold' : 'text-neutral-950'}
         `}
     >
       {Icon && (
         <Icon
           className={`*:transition-colors duration-100
-            ${isCurrentLocation ? '*:fill-neutral-50 group-hover:*:fill-neutral-50 font-bold' : '*:fill-neutral-600 group-hover:*:fill-neutral-800'}
+            ${isCurrentLocation ? '*:fill-neutral-50 group-hover:*:fill-neutral-50 font-bold' : '*:fill-neutral-950'}
             `}
         />
       )}

@@ -10,9 +10,9 @@ import TestIcon from 'assets/icons/test.svg?react'
 
 const Navigation = () => {
   return (
-    <div className="row-start-2 w-full h-full flex flex-col gap-2 px-6 py-4 border-r">
+    <div className="row-start-2 w-full h-full flex flex-col border-r">
       <NavigationLink
-        to="/browse"
+        to="/local"
         Icon={BrowseIcon}
       >
         Browse

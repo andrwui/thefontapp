@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { OnFileDrop, OnFileDropOff } from 'runtime/runtime'
 import { InstallFont } from 'go/main/App'
 import Dropzone from 'components/common/Dropzone'
-import FontList from 'components/browse/FontList'
-import ConfigPanel from 'components/browse/ConfigPanel'
+import FontList from 'components/local-fonts/LocalFontList'
+import ConfigPanel from 'components/shared/ConfigPanel'
 
-const Browse = () => {
+const Local = () => {
   const { getRootProps, isDragActive } = useDropzone()
 
   useEffect(() => {
@@ -51,4 +51,4 @@ const Browse = () => {
   )
 }
 
-export default Browse
+export default Local

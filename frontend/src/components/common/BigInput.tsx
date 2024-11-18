@@ -59,7 +59,7 @@ const BigInput = ({
   }
 
   return (
-    <div className={`relative flex items-center w-full h-full px-5 ${className}`}>
+    <div className={`relative flex items-center w-full px-5 ${className}`}>
       <Icon
         className={`absolute  *:fill-neutral-600 size-4 transition-all duration-100 ${isFocused ? 'opacity-0 left-0' : 'opacity-100 left-5'}`}
       />
