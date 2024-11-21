@@ -1,4 +1,4 @@
-export namespace models {
+export namespace fontfamily {
 	
 	export class FontVariant {
 	    name: string;

@@ -1,9 +1,9 @@
 import { GetFonts } from 'go/main/App'
-import { models } from 'go/models'
+import { fontfamily } from 'go/models'
 import { create } from 'zustand'
 
 type TLocalFontStore = {
-  localFonts: models.FontFamily[]
+  localFonts: fontfamily.FontFamily[]
   loadingLocalFonts: boolean
   getLocalFonts: () => void
 }

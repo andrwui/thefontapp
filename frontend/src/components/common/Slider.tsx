@@ -12,40 +12,39 @@ import {
 import ResetIcon from 'assets/icons/cross.svg?react'
 
 type CustomSliderProps = RadixSlider.SliderProps & {
-  icon?: ReactElement
-  input?: boolean
+  label?: string
   unit?: string
-  reset?: () => void
+  onReset: () => void
 }
 
-const Slider = ({ icon, reset, unit, input, ...sliderProps }: CustomSliderProps) => {
+const Slider = ({ label, unit, onReset, ...sliderProps }: CustomSliderProps) => {
   return (
     <div className="w-full h-6 flex items-center justify-center gap-5 ">
-      {icon && icon}
-      <RadixSlider.Root
-        className="relative flex items-center select-none touch-none w-full h-5"
-        {...sliderProps}
-      >
-        <RadixSlider.Track className="bg-neutral-300 relative grow  h-1">
-          <RadixSlider.Range className="absolute bg-neutral-950  h-full" />
-        </RadixSlider.Track>
-        <RadixSlider.Thumb className="block w-4 h-4 bg-neutral-950 rounded-full focus:outline-none" />
-      </RadixSlider.Root>
-      {input && (
-        <Slider.InputValue
+      <div className="flex flex-col w-full gap-1">
+        <p className="text-sm">{label}</p>
+        <RadixSlider.Root
+          className="relative flex items-center select-none touch-none w-full h-5"
+          {...sliderProps}
+        >
+          <RadixSlider.Track className="bg-neutral-300 relative grow  h-1">
+            <RadixSlider.Range className="absolute bg-neutral-950  h-full" />
+          </RadixSlider.Track>
+          <RadixSlider.Thumb className="block w-4 h-4 bg-neutral-950 rounded-full focus:outline-none" />
+        </RadixSlider.Root>
+      </div>
+      <div className="flex items-center gap-1  border-1 border-neutral-950 border-solid border pr-2">
+        <InputValue
           max={sliderProps.max!}
           min={sliderProps.min!}
           onChange={sliderProps.onValueChange}
           unit={unit!}
           value={sliderProps.value!}
         />
-      )}
-      {reset && (
         <ResetIcon
-          onClick={reset}
-          className="cursor-pointer w-16"
+          onClick={onReset}
+          className="cursor-pointer"
         />
-      )}
+      </div>
     </div>
   )
 }
@@ -57,7 +56,7 @@ type InputValueProps = {
   max: number
 }
 
-Slider.InputValue = ({ unit, value, onChange, min, max }: InputValueProps): ReactElement => {
+const InputValue = ({ unit, value, onChange, min, max }: InputValueProps): ReactElement => {
   const [inputValue, setInputValue] = useState(value[0].toString())
   const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -123,7 +122,7 @@ Slider.InputValue = ({ unit, value, onChange, min, max }: InputValueProps): Reac
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      className="w-16 bg-neutral-50 p-1 rounded-sm text-center text-sm text-regular max-xl:hidden"
+      className="w-16 bg-neutral-50 p-1 rounded-sm text-center text-xs text-regular max-xl:hidden"
     />
   )
 }

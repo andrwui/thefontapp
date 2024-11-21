@@ -15,7 +15,7 @@ const Navigation = () => {
         to="/local"
         Icon={BrowseIcon}
       >
-        Browse
+        Local
       </NavigationLink>
       <NavigationLink
         to="/google"

@@ -75,10 +75,9 @@ const ConfigPanel = () => {
         />
 
         <Slider
-          input
           unit="px"
-          reset={resetFontSize}
-          icon={<FontSizeIcon />}
+          onReset={resetFontSize}
+          label={'Font size'}
           value={[fontSize]}
           onValueChange={v => setFontSize(v[0])}
           min={60}
@@ -86,10 +85,9 @@ const ConfigPanel = () => {
           step={5}
         />
         <Slider
-          input
           unit=""
-          reset={resetFontWeight}
-          icon={<FontWeightIcon className="w-[20px]" />}
+          onReset={resetFontWeight}
+          label={'Font weight'}
           value={[fontWeight]}
           onValueChange={v => setFontWeight(v[0])}
           min={100}
@@ -97,10 +95,9 @@ const ConfigPanel = () => {
           step={100}
         />
         <Slider
-          input
           unit="em"
-          reset={resetLetterSpacing}
-          icon={<LetterSpacingIcon className="w-[20px]" />}
+          onReset={resetLetterSpacing}
+          label={'Letter spacing'}
           value={[letterSpacing]}
           onValueChange={v => setLetterSpacing(v[0])}
           min={-0.15}

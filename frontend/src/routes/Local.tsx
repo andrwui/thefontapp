@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone'
 import { OnFileDrop, OnFileDropOff } from 'runtime/runtime'
 import { InstallFont } from 'go/main/App'
 import Dropzone from 'components/common/Dropzone'
-import FontList from 'components/local-fonts/LocalFontList'
+import FontList from 'components/vendor/local/LocalFontList'
 import ConfigPanel from 'components/shared/ConfigPanel'
 
 const Local = () => {

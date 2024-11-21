@@ -14,7 +14,6 @@ const CyclerButton = ({ options, onClick }: CyclerButtonProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0)
 
   const handleClick = () => {
-    console.log('PIJASO')
     const nextIndex = (currentIndex + 1) % options.length
     setCurrentIndex(nextIndex)
 
@@ -23,7 +22,7 @@ const CyclerButton = ({ options, onClick }: CyclerButtonProps) => {
 
   return (
     <button
-      className="w-20 aspect-square grid place-items-center"
+      className="w-20 aspect-square grid place-items-center border border-1 border-solid border-neutral-950 p-2"
       onClick={handleClick}
     >
       {options[currentIndex].icon}

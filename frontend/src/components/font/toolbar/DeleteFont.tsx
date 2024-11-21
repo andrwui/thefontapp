@@ -2,24 +2,19 @@ import { useState } from 'react'
 import TrashIcon from 'assets/icons/trash_can.svg?react'
 import Spinner from 'components/common/Spinner'
 import { DeleteFamily } from 'go/main/App'
-import { models } from 'go/models'
 import { useLocalFontStore } from 'stores/LocalFontStore'
 import Dialog from 'components/common/Dialog'
 import Button from 'components/common/Button'
-import IconButton from 'components/common/IconButton'
+import ToolbarIconButton from './ToolbarIconButton'
 
-type DeleteFontProps = {
-  font: models.FontFamily
-}
-
-const DeleteLocalFont = ({ font }: DeleteFontProps) => {
+const DeleteFont = ({ fontPaths, hasReadonly }: { fontPaths: string[]; hasReadonly: boolean }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const { getLocalFonts } = useLocalFontStore()
 
   const handleDelete = () => {
     setIsDeleting(true)
-    DeleteFamily(font).then(() => {
+    DeleteFamily(fontPaths).then(() => {
       setIsDeleting(false)
       setIsDialogOpen(false)
       getLocalFonts()
@@ -28,11 +23,11 @@ const DeleteLocalFont = ({ font }: DeleteFontProps) => {
 
   return (
     <div>
-      <IconButton
+      <ToolbarIconButton
         Icon={TrashIcon}
         onClick={() => setIsDialogOpen(true)}
-        disabled={font.hasReadonly}
-        className={`${font.hasReadonly && '*:fill-neutral-300'}`}
+        disabled={hasReadonly}
+        className={`${hasReadonly && '*:fill-neutral-300'}`}
       />
       <Dialog
         isOpen={isDialogOpen}
@@ -58,4 +53,4 @@ const DeleteLocalFont = ({ font }: DeleteFontProps) => {
   )
 }
 
-export default DeleteLocalFont
+export default DeleteFont

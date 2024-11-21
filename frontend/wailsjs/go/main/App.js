@@ -13,3 +13,7 @@ export function GetFonts() {
 export function InstallFont(arg1) {
   return window['go']['main']['App']['InstallFont'](arg1);
 }
+
+export function InstallGoogleFont(arg1, arg2) {
+  return window['go']['main']['App']['InstallGoogleFont'](arg1, arg2);
+}

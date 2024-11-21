@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Local from 'routes/Local'
+import Google from 'routes/Google'
 import Navigation from 'layout/sidebar/navigation/Navigation'
 import SearchBar from 'layout/header/SearchBar'
 import AppName from 'layout/header/AppName'
@@ -23,6 +24,10 @@ const Layout = () => {
         <Route
           path="/local"
           element={<Local />}
+        />
+        <Route
+          path="/google"
+          element={<Google />}
         />
       </Routes>
     </div>

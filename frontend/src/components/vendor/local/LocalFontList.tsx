@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
-import { models } from 'go/models'
-import FontWrapper from 'components/shared/FontWrapper'
+import { fontfamily } from 'go/models'
+import FontWrapper from 'components/font/FontWrapper'
 import { Virtuoso } from 'react-virtuoso'
 import useSearchStore from 'stores/useSearchStore'
 import { useLocalFontStore } from 'stores/LocalFontStore'
-import FontToolbar from 'components/shared/FontToolbar'
-import DeleteLocalFont from './toolbar/DeleteLocalFont'
-import CopyLocalFontName from './toolbar/CopyLocalFontName'
-import LocalFontDisplay from './LocalFontDisplay'
-import LocalFontName from './toolbar/LocalFontName'
+import FontToolbar from 'components/font/FontToolbar'
+import DeleteFont from 'components/font/toolbar/DeleteFont'
+import CopyFontName from 'components/font/toolbar/CopyFontName'
+import FontDisplay from 'components/font/FontDisplay'
+import FontName from 'components/font/toolbar/FontName'
 
 const LocalFontList = () => {
   const { localFonts, getLocalFonts } = useLocalFontStore()
 
-  const [filteredFonts, setFilteredFonts] = useState([] as models.FontFamily[])
+  const [filteredFonts, setFilteredFonts] = useState([] as fontfamily.FontFamily[])
 
   const { searchValue } = useSearchStore()
 
@@ -31,18 +31,19 @@ const LocalFontList = () => {
   return (
     <div className="flex flex-col h-full overflow-y-scroll overflow-x-hidden">
       <Virtuoso
-        totalCount={filteredFonts.length}
-        style={{ height: '100%', overflowX: 'hidden' }}
-        itemContent={i => {
-          const font = filteredFonts[i] || localFonts[i]
+        data={filteredFonts}
+        itemContent={(_, font: fontfamily.FontFamily) => {
           return (
             <FontWrapper>
               <FontToolbar>
-                <LocalFontName font={font} />
-                <CopyLocalFontName font={font} />
-                <DeleteLocalFont font={font} />
+                <FontName>{font.name}</FontName>
+                <CopyFontName fontName={font.name} />
+                <DeleteFont
+                  fontPaths={font.variants.map(f => f.path)}
+                  hasReadonly={font.hasReadonly}
+                />
               </FontToolbar>
-              <LocalFontDisplay font={font} />
+              <FontDisplay fontName={font.name} />
             </FontWrapper>
           )
         }}
