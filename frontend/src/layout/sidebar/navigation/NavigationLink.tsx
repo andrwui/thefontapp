@@ -1,3 +1,4 @@
+import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const NavigationLink = ({
@@ -7,7 +8,7 @@ const NavigationLink = ({
 }: {
   to: string
   Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
-  children: string
+  children: any
 }) => {
   const curLocation = useLocation().pathname
 
@@ -29,7 +30,7 @@ const NavigationLink = ({
             `}
         />
       )}
-      <p className="leading-5">{children}</p>
+      {children}
     </Link>
   )
 }

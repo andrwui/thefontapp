@@ -1,4 +1,4 @@
-import ConfigPanel from 'components/shared/ConfigPanel'
+import ConfigPanel from 'components/vendor/shared/config_panel/ConfigPanel'
 import GoogleFontList from 'components/vendor/google/GoogleFontList'
 
 const Google = () => {

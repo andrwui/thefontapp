@@ -22,7 +22,7 @@ const CyclerButton = ({ options, onClick }: CyclerButtonProps) => {
 
   return (
     <button
-      className="w-20 aspect-square grid place-items-center border border-1 border-solid border-neutral-950 p-2"
+      className="w-20 aspect-square grid place-items-center border p-2"
       onClick={handleClick}
     >
       {options[currentIndex].icon}

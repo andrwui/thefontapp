@@ -6,6 +6,7 @@ import { useLocalFontStore } from 'stores/LocalFontStore'
 import Dialog from 'components/common/Dialog'
 import Button from 'components/common/Button'
 import ToolbarIconButton from './ToolbarIconButton'
+import { toast } from 'react-hot-toast/headless'
 
 const DeleteFont = ({ fontPaths, hasReadonly }: { fontPaths: string[]; hasReadonly: boolean }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -18,6 +19,7 @@ const DeleteFont = ({ fontPaths, hasReadonly }: { fontPaths: string[]; hasReadon
       setIsDeleting(false)
       setIsDialogOpen(false)
       getLocalFonts()
+      toast(`Font family deleted successfully.`)
     })
   }
 
@@ -33,20 +35,22 @@ const DeleteFont = ({ fontPaths, hasReadonly }: { fontPaths: string[]; hasReadon
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >
-        <h1 className="text-2xl font-bold">Delete font</h1>
-        <div>
-          <p>Are you sure you want to delete this font?</p>
-          <p>This operation is permanent.</p>
-        </div>
-        <div className="flex gap-3 justify-end">
-          <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-          <Button
-            variant="danger"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? <Spinner /> : 'Delete'}
-          </Button>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-2xl font-bold">Delete font</h1>
+          <div>
+            <p>Are you sure you want to delete this font?</p>
+            <p>This operation is permanent.</p>
+          </div>
+          <div className="flex gap-3 justify-end">
+            <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? <Spinner /> : 'Delete'}
+            </Button>
+          </div>
         </div>
       </Dialog>
     </div>

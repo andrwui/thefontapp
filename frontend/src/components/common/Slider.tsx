@@ -32,7 +32,7 @@ const Slider = ({ label, unit, onReset, ...sliderProps }: CustomSliderProps) => 
           <RadixSlider.Thumb className="block w-4 h-4 bg-neutral-950 rounded-full focus:outline-none" />
         </RadixSlider.Root>
       </div>
-      <div className="flex items-center gap-1  border-1 border-neutral-950 border-solid border pr-2">
+      <div className="flex items-center gap-1 border pr-2">
         <InputValue
           max={sliderProps.max!}
           min={sliderProps.min!}

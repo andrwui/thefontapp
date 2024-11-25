@@ -1,7 +1,7 @@
-const Spinner = () => {
+const Spinner = ({ size }: { size?: 'sm' | 'md' | 'lg' }) => {
   return (
     <div
-      className="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-950 rounded-full"
+      className={`animate-spin inline-block  border-current border-t-transparent text-950 rounded-full ${size == 'sm' ? 'size-3 border-[1px]' : size == 'lg' ? 'size-9 border-[5px]' : 'size-6 border-[3px]'}`}
       role="status"
       aria-label="loading"
     >

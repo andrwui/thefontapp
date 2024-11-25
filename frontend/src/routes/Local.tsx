@@ -4,7 +4,7 @@ import { OnFileDrop, OnFileDropOff } from 'runtime/runtime'
 import { InstallFont } from 'go/main/App'
 import Dropzone from 'components/common/Dropzone'
 import FontList from 'components/vendor/local/LocalFontList'
-import ConfigPanel from 'components/shared/ConfigPanel'
+import ConfigPanel from 'components/vendor/shared/config_panel/ConfigPanel'
 
 const Local = () => {
   const { getRootProps, isDragActive } = useDropzone()

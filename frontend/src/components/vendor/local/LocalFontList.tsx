@@ -4,17 +4,15 @@ import FontWrapper from 'components/font/FontWrapper'
 import { Virtuoso } from 'react-virtuoso'
 import useSearchStore from 'stores/useSearchStore'
 import { useLocalFontStore } from 'stores/LocalFontStore'
-import FontToolbar from 'components/font/FontToolbar'
+import FontToolbar from 'components/font/toolbar/FontToolbar'
 import DeleteFont from 'components/font/toolbar/DeleteFont'
 import CopyFontName from 'components/font/toolbar/CopyFontName'
 import FontDisplay from 'components/font/FontDisplay'
 import FontName from 'components/font/toolbar/FontName'
 
 const LocalFontList = () => {
-  const { localFonts, getLocalFonts } = useLocalFontStore()
-
+  const { localFonts } = useLocalFontStore()
   const [filteredFonts, setFilteredFonts] = useState([] as fontfamily.FontFamily[])
-
   const { searchValue } = useSearchStore()
 
   useEffect(() => {
@@ -23,10 +21,6 @@ const LocalFontList = () => {
       : localFonts
     setFilteredFonts(filtered)
   }, [searchValue, localFonts])
-
-  useEffect(() => {
-    getLocalFonts()
-  }, [])
 
   return (
     <div className="flex flex-col h-full overflow-y-scroll overflow-x-hidden">

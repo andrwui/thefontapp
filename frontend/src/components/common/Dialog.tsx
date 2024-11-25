@@ -19,12 +19,14 @@ const Dialog = ({ isOpen, onClose, children }: DialogProps) => {
           onClick={onClose}
         >
           <motion.div
-            className="w-fit h-fit px-4 py-4 bg-neutral-50 rounded-md flex flex-col gap-4"
+            className="bg-neutral-50 w-fit h-fit px-4 py-4 border"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={(e: MouseEvent) => e.stopPropagation()}
+            onClick={e => {
+              e.stopPropagation()
+            }}
           >
             {children}
           </motion.div>

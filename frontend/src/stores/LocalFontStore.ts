@@ -2,16 +2,15 @@ import { GetFonts } from 'go/main/App'
 import { fontfamily } from 'go/models'
 import { create } from 'zustand'
 
-type TLocalFontStore = {
+type LocalFontStore = {
   localFonts: fontfamily.FontFamily[]
   loadingLocalFonts: boolean
   getLocalFonts: () => void
 }
 
-export const useLocalFontStore = create<TLocalFontStore>(set => ({
+export const useLocalFontStore = create<LocalFontStore>(set => ({
   localFonts: [],
   loadingLocalFonts: false,
-  deletingLocalFonts: false,
 
   getLocalFonts: () => {
     set({ loadingLocalFonts: true })
@@ -21,7 +20,7 @@ export const useLocalFontStore = create<TLocalFontStore>(set => ({
         if (a.name > b.name) return 1
         return 0
       })
-      set({ localFonts, loadingLocalFonts: false })
+      set({ localFonts: sortedFonts, loadingLocalFonts: false })
     })
   },
 }))

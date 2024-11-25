@@ -5,15 +5,16 @@ type ButtonProps = {
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
 const Button = ({ variant = 'default', children, className, ...rest }: ButtonProps) => {
-  const bgColor =
-    variant === 'danger' ? 'bg-red-700' : variant === 'cta' ? 'bg-neutral-950' : 'bg-neutral-300'
-
-  const textColor =
-    variant === 'danger' || variant === 'cta' ? 'text-neutral-50' : 'text-neutral-950'
+  const variantStyles =
+    variant === 'danger'
+      ? 'bg-red-700 text-neutral-50 hover:brightness-90 '
+      : variant === 'cta'
+        ? 'bg-neutral-950 text-neutral-50'
+        : 'bg-neutral-50 border hover:brightness-90'
 
   return (
     <button
-      className={`px-3 py-1 rounded-md disabled:brightness-75 hover:brightness-110 cursor-pointer ${bgColor} ${textColor} ${className}`}
+      className={`px-3 py-1 cursor-pointer transition-all duration-200 ${variantStyles} ${className}`}
       {...rest}
     >
       {children}

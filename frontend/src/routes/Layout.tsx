@@ -4,8 +4,22 @@ import Google from 'routes/Google'
 import Navigation from 'layout/sidebar/navigation/Navigation'
 import SearchBar from 'layout/header/SearchBar'
 import AppName from 'layout/header/AppName'
+import { useEffect } from 'react'
+import { useGoogleFontsStore } from 'stores/GoogleFontsStore'
+import { useLocalFontStore } from 'stores/LocalFontStore'
 
 const Layout = () => {
+  const { getGoogleFonts } = useGoogleFontsStore()
+  const { getLocalFonts } = useLocalFontStore()
+
+  useEffect(() => {
+    getLocalFonts()
+  }, [getLocalFonts])
+
+  useEffect(() => {
+    getGoogleFonts()
+  }, [getGoogleFonts])
+
   return (
     <div className="w-screen h-screen grid grid-cols-mainLayout grid-rows-mainLayout">
       <AppName />

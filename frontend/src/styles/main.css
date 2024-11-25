@@ -11,9 +11,11 @@ body {
 
 body * {
   font-size: 18px;
-  font-family: geist_local;
+  font-family: Host Grotesk;
+  font-synthesis: none;
   @apply tracking-tight;
   @apply border-neutral-950;
+  @apply border-solid;
   @apply selection:bg-neutral-950;
   @apply selection:text-neutral-50
 }

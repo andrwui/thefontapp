@@ -20,7 +20,6 @@ const Dropzone = ({ children }: DropzoneProps) => {
           animate={{ scale: 1 }}
           exit={{ scale: 0 }}
           transition={{ duration: 0.2 }}
-          onClick={(e: MouseEvent) => e.stopPropagation()}
         >
           {children}
         </motion.div>
