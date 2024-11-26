@@ -1,19 +1,21 @@
 import CopyItem from 'assets/icons/clipboard.svg?react'
 import Spinner from 'components/common/Spinner'
+import { useState } from 'react'
 import { toast } from 'react-hot-toast/headless'
 import ToolbarIconButton from './ToolbarIconButton'
 
 const CopyFontName = ({ fontName }: { fontName: string }) => {
-  const onClick = async () => {
-    const id = toast.custom(
-      <div className="flex gap-5 items-center justify-start">
-        <Spinner size="sm" /> Copying "${fontName}" to clipboard...
-      </div>,
-    )
+  const [isLoading, setIsLoading] = useState(false)
+
+  const onClick = () => {
+    setIsLoading(true)
     navigator.clipboard.writeText(fontName).then(() => {
-      toast(`"${fontName}" copied to the clipboard.`, { id: id })
+      setIsLoading(false)
+      toast(`"${fontName}" copied to the clipboard.`)
     })
   }
+
+  if (isLoading) return <Spinner size="sm" />
 
   return (
     <ToolbarIconButton
