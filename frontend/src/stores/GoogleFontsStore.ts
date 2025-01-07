@@ -1,4 +1,3 @@
-import { GOOGLE_FONTS_API_KEY } from 'constants/GoogleFonts'
 import { GoogleFont, RawGoogleFontsResponse } from 'types/GoogleFont'
 import { create } from 'zustand'
 
@@ -9,19 +8,23 @@ type GoogleFontsStore = {
   googleFontsHasError: boolean
 }
 
-export const useGoogleFontsStore = create<GoogleFontsStore>(set => ({
+export const useGoogleFontsStore = create<GoogleFontsStore>((set) => ({
   googleFonts: [],
   loadingGoogleFonts: false,
   googleFontsHasError: false,
   getGoogleFonts: () => {
+    console.log(import.meta.env.VITE_GOOGLE_FONTS_API_KEY)
     set({ loadingGoogleFonts: true })
-    fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_FONTS_API_KEY}`, {
-      headers: {
-        Accept: 'application/json',
-        Origin: window.location.origin,
+    fetch(
+      `https://www.googleapis.com/webfonts/v1/webfonts?key=${import.meta.env.VITE_GOOGLE_FONTS_API_KEY}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Origin: window.location.origin,
+        },
       },
-    })
-      .then(data => {
+    )
+      .then((data) => {
         return data.json()
       })
       .then((json: RawGoogleFontsResponse) => {

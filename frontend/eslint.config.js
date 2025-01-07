@@ -25,7 +25,7 @@ export default [
           trailingComma: 'all',
           bracketSpacing: true,
           jsxBracketSameLine: false,
-          arrowParens: 'avoid',
+          arrowParens: 'always',
           singleAttributePerLine: true,
         },
       ],
