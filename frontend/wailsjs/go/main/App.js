@@ -6,14 +6,14 @@ export function DeleteFamily(arg1) {
   return window['go']['main']['App']['DeleteFamily'](arg1);
 }
 
-export function GetFonts() {
-  return window['go']['main']['App']['GetFonts']();
-}
-
-export function InstallFont(arg1) {
-  return window['go']['main']['App']['InstallFont'](arg1);
+export function GetLocalFonts() {
+  return window['go']['main']['App']['GetLocalFonts']();
 }
 
 export function InstallGoogleFont(arg1, arg2) {
   return window['go']['main']['App']['InstallGoogleFont'](arg1, arg2);
+}
+
+export function InstallLocalFont(arg1) {
+  return window['go']['main']['App']['InstallLocalFont'](arg1);
 }

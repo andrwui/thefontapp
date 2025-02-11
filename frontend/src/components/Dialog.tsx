@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import * as motion from 'motion/react-client'
+import { AnimatePresence } from 'motion/react'
 
 type DialogProps = {
   isOpen: boolean
@@ -24,7 +25,7 @@ const Dialog = ({ isOpen, onClose, children }: DialogProps) => {
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation()
             }}
           >

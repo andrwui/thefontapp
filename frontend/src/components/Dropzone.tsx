@@ -1,4 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import * as motion from 'motion/react-client'
+import { AnimatePresence } from 'motion/react'
 
 type DropzoneProps = {
   children: React.ReactNode | React.ReactNode[]

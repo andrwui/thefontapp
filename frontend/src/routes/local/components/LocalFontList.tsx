@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fontfamily } from 'go/models'
+import { font } from 'go/models'
 import FontWrapper from 'components/font/FontWrapper'
 import { Virtuoso } from 'react-virtuoso'
 import useSearchStore from 'stores/useSearchStore'
@@ -12,12 +12,12 @@ import FontName from 'components/font/toolbar/FontName'
 
 const LocalFontList = () => {
   const { localFonts } = useLocalFontStore()
-  const [filteredFonts, setFilteredFonts] = useState([] as fontfamily.FontFamily[])
+  const [filteredFonts, setFilteredFonts] = useState([] as font.FontFamily[])
   const { searchValue } = useSearchStore()
 
   useEffect(() => {
     const filtered = searchValue
-      ? localFonts.filter(font => font.name.toLowerCase().includes(searchValue.toLowerCase()))
+      ? localFonts.filter((font) => font.name.toLowerCase().includes(searchValue.toLowerCase()))
       : localFonts
     setFilteredFonts(filtered)
   }, [searchValue, localFonts])
@@ -26,14 +26,14 @@ const LocalFontList = () => {
     <div className="flex flex-col h-full overflow-y-scroll overflow-x-hidden">
       <Virtuoso
         data={filteredFonts}
-        itemContent={(_, font: fontfamily.FontFamily) => {
+        itemContent={(_, font: font.FontFamily) => {
           return (
             <FontWrapper>
               <FontToolbar>
                 <FontName>{font.name}</FontName>
                 <CopyFontName fontName={font.name} />
                 <DeleteFont
-                  fontPaths={font.variants.map(f => f.path)}
+                  fontPaths={font.variants.map((f) => f.path)}
                   hasReadonly={font.hasReadonly}
                 />
               </FontToolbar>

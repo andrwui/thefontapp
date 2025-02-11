@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { OnFileDrop, OnFileDropOff } from 'runtime/runtime'
-import { InstallFont } from 'go/main/App'
+import { InstallLocalFont } from 'go/main/App'
 import Dropzone from 'components/common/Dropzone'
 import FontList from 'components/vendor/local/LocalFontList'
 import ConfigPanel from 'components/vendor/shared/config_panel/ConfigPanel'
@@ -15,7 +15,7 @@ const Local = () => {
         const ext = path.split('.').pop()?.toLowerCase()
         if (ext === 'otf' || ext === 'ttf') {
           console.log(`Installing ${path}`)
-          await InstallFont(path)
+          await InstallLocalFont(path)
         } else {
           console.log(`invalid extension .${ext}`)
         }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
-	ff "thefontapp/models/FontFamily"
+	lfm "thefontapp/internal/font/local/model"
 )
 
 //go:embed all:frontend/dist
@@ -25,8 +25,8 @@ func main() {
 
 		Bind: []interface{}{
 			app,
-			&ff.FontFamily{},
-			&ff.FontVariant{},
+			&lfm.FontFamily{},
+			&lfm.FontVariant{},
 		},
 	})
 

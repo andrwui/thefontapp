@@ -11,7 +11,7 @@ body {
 
 body * {
   font-size: 18px;
-  font-family: Host Grotesk;
+  font-family: geist_local;
   font-synthesis: none;
   @apply tracking-tight;
   @apply border-neutral-950;
