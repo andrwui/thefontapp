@@ -1,21 +1,24 @@
-@import url('../assets/fonts/geist/geist.css');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('./assets/fonts/geist/geist.css');
+@import "tailwindcss";
 
 
-body {
-  @apply bg-neutral-50 text-neutral-950 select-none
+html {
+  font-size: 14px;
+  font-family: geist_local;
+  @apply bg-neutral-950;
+  @apply text-neutral-50; 
+  @apply font-light;
+}
+
+
+@theme {
+
+  --main-layout-rows: calc(var(--spacing) * 14) 1fr;
+  --main-layout-cols: calc(var(--spacing) * 80) 1fr;
 }
 
 body * {
-  font-size: 18px;
-  font-family: geist_local;
-  font-synthesis: none;
-  @apply tracking-tight;
-  @apply border-neutral-950;
-  @apply border-solid;
-  @apply selection:bg-neutral-950;
-  @apply selection:text-neutral-50
+  @apply select-none;
+  @apply selection:bg-neutral-50;
+  @apply selection:text-neutral-950;
 }

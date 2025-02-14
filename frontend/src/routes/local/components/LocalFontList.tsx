@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react'
 import { font } from 'go/models'
-import FontWrapper from 'components/font/FontWrapper'
+import { useEffect, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
-import useSearchStore from 'stores/useSearchStore'
-import { useLocalFontStore } from 'stores/LocalFontStore'
-import FontToolbar from 'components/font/toolbar/FontToolbar'
-import DeleteFont from 'components/font/toolbar/DeleteFont'
-import CopyFontName from 'components/font/toolbar/CopyFontName'
-import FontDisplay from 'components/font/FontDisplay'
-import FontName from 'components/font/toolbar/FontName'
+import FontDisplay from 'routes/components/font/FontDisplay'
+import FontWrapper from 'routes/components/font/FontWrapper'
+import CopyFontName from 'routes/components/font/toolbar/CopyFontName'
+import DeleteFont from 'routes/components/font/toolbar/DeleteFont'
+import FontName from 'routes/components/font/toolbar/FontName'
+import FontToolbar from 'routes/components/font/toolbar/FontToolbar'
+import { useLocalFontStore } from 'routes/local/stores/LocalFontStore'
+import useSearchStore from 'routes/stores/useSearchStore'
 
 const LocalFontList = () => {
   const { localFonts } = useLocalFontStore()
@@ -23,7 +23,7 @@ const LocalFontList = () => {
   }, [searchValue, localFonts])
 
   return (
-    <div className="flex flex-col h-full overflow-y-scroll overflow-x-hidden">
+    <div className="col-start-2 row-start-2 flex h-full flex-col overflow-x-hidden overflow-y-scroll">
       <Virtuoso
         data={filteredFonts}
         itemContent={(_, font: font.FontFamily) => {

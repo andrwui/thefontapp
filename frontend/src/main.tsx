@@ -1,8 +1,8 @@
+import './main.css'
+import Toasts from 'components/Toasts'
 import { createRoot } from 'react-dom/client'
-import './styles/main.css'
 import { BrowserRouter } from 'react-router-dom'
-import Layout from 'routes/Layout'
-import Toasts from 'components/common/Toasts'
+import Layout from 'routes/layout'
 
 // handling wails binding context error
 if (!('go' in window)) location.replace('/')
@@ -13,8 +13,7 @@ const root = createRoot(container!)
 
 root.render(
   <BrowserRouter>
-    <Toasts></Toasts>
-
+    <Toasts />
     <Layout />
   </BrowserRouter>,
 )

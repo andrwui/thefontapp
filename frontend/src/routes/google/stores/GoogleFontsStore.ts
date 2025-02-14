@@ -1,4 +1,4 @@
-import { GoogleFont, RawGoogleFontsResponse } from 'types/GoogleFont'
+import { GoogleFont, RawGoogleFontsResponse } from 'routes/google/types/GoogleFont'
 import { create } from 'zustand'
 
 type GoogleFontsStore = {

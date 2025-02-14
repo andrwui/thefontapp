@@ -17,3 +17,7 @@ export function InstallGoogleFont(arg1, arg2) {
 export function InstallLocalFont(arg1) {
   return window['go']['main']['App']['InstallLocalFont'](arg1);
 }
+
+export function RetrieveZipFileNames(arg1) {
+  return window['go']['main']['App']['RetrieveZipFileNames'](arg1);
+}

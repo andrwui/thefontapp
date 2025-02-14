@@ -1,9 +1,9 @@
-import ConfigPanel from 'components/vendor/shared/config_panel/ConfigPanel'
-import GoogleFontList from 'components/vendor/google/GoogleFontList'
+import ConfigPanel from 'routes/components/config_panel/ConfigPanel'
+import GoogleFontList from 'routes/google/components/GoogleFontList'
 
 const Google = () => {
   return (
-    <div className="h-full w-full flex flex-col overflow-y-auto ">
+    <div className="flex h-full w-full flex-col overflow-y-auto">
       <GoogleFontList />
       <ConfigPanel />
     </div>

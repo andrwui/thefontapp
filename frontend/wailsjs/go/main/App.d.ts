@@ -9,3 +9,5 @@ export function GetLocalFonts():Promise<Array<font.FontFamily>>;
 export function InstallGoogleFont(arg1:string,arg2:string):Promise<void>;
 
 export function InstallLocalFont(arg1:string):Promise<void>;
+
+export function RetrieveZipFileNames(arg1:string):Promise<Array<string>>;

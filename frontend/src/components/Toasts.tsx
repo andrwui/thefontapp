@@ -1,4 +1,5 @@
 import { useToaster } from 'react-hot-toast/headless'
+import { twMerge } from 'tailwind-merge'
 
 const Toasts = () => {
   const { toasts, handlers } = useToaster()
@@ -6,11 +7,11 @@ const Toasts = () => {
 
   return (
     <div
-      className="top-16 right-5 absolute z-50"
+      className="absolute top-16 right-5 z-50"
       onMouseEnter={startPause}
       onMouseLeave={endPause}
     >
-      {toasts.map(toast => {
+      {toasts.map((toast) => {
         const offset = calculateOffset(toast, {
           reverseOrder: false,
           gutter: 5,
@@ -26,7 +27,10 @@ const Toasts = () => {
           <div
             key={toast.id}
             ref={ref}
-            className={`absolute right-0 w-80 transition-all duration-200 ${toast.visible ? 'opacity-100' : 'opacity-0'} bg-neutral-50 border p-5`}
+            className={twMerge(
+              'absolute right-0 w-max rounded-md bg-neutral-900 p-5 opacity-0 transition-all duration-200',
+              toast.visible && 'opacity-100',
+            )}
             style={{
               transform: `translateY(${offset}px)`,
             }}

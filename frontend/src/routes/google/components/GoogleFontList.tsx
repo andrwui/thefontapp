@@ -1,15 +1,15 @@
-import FontDisplay from 'components/font/FontDisplay'
-import FontToolbar from 'components/font/toolbar/FontToolbar'
-import FontWrapper from 'components/font/FontWrapper'
-import CopyFontName from 'components/font/toolbar/CopyFontName'
-import FontName from 'components/font/toolbar/FontName'
-import InstallFont from 'components/font/toolbar/InstallGoogleFont'
-import useSearchStore from 'stores/useSearchStore'
+import Spinner from 'components/Spinner'
 import { useEffect, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
-import { GoogleFont } from 'types/GoogleFont'
-import { useGoogleFontsStore } from 'stores/GoogleFontsStore'
-import Spinner from 'components/common/Spinner'
+import FontDisplay from 'routes/components/font/FontDisplay'
+import FontWrapper from 'routes/components/font/FontWrapper'
+import CopyFontName from 'routes/components/font/toolbar/CopyFontName'
+import FontName from 'routes/components/font/toolbar/FontName'
+import FontToolbar from 'routes/components/font/toolbar/FontToolbar'
+import InstallFont from 'routes/components/font/toolbar/InstallGoogleFont'
+import { useGoogleFontsStore } from 'routes/google/stores/GoogleFontsStore'
+import { GoogleFont } from 'routes/google/types/GoogleFont'
+import useSearchStore from 'routes/stores/useSearchStore'
 
 const GoogleFontList = () => {
   const { googleFonts, loadingGoogleFonts, googleFontsHasError } = useGoogleFontsStore()
@@ -19,21 +19,21 @@ const GoogleFontList = () => {
 
   useEffect(() => {
     const filtered = searchValue
-      ? googleFonts.filter(font => font.family.toLowerCase().includes(searchValue.toLowerCase()))
+      ? googleFonts.filter((font) => font.family.toLowerCase().includes(searchValue.toLowerCase()))
       : googleFonts
     setFilteredFonts(filtered)
   }, [searchValue, googleFonts])
 
   if (googleFontsHasError) {
     return (
-      <div className="size-full flex flex-col p-5">
-        <h1 className="text-7xl font-black mb-5">We all make mistakes.</h1>
-        <p className="text-3xl mb-3">Please, check your internet connection and try again.</p>
+      <div className="flex size-full flex-col p-5">
+        <h1 className="mb-5 text-7xl font-black">We all make mistakes.</h1>
+        <p className="mb-3 text-3xl">Please, check your internet connection and try again.</p>
         <p className="text-2xl">
           If the error persists, buy a new router. (Or just{' '}
           <a
             href="#"
-            className="text-2xl underline font-extrabold"
+            className="text-2xl font-extrabold underline"
           >
             make a bug report here
           </a>

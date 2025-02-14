@@ -1,13 +1,14 @@
 package main
 
 import (
-  "context"
+	"context"
 
-  lfm "thefontapp/internal/font/local/model"
-  lfman "thefontapp/internal/font/local/manager"
-  lfs "thefontapp/internal/font/local/scanner"
-  cfm "thefontapp/internal/font/common/manager"
-  gfman "thefontapp/internal/font/google/manager"
+	arc "thefontapp/internal/font/common/archive"
+	cfm "thefontapp/internal/font/common/manager"
+	gfman "thefontapp/internal/font/google/manager"
+	lfman "thefontapp/internal/font/local/manager"
+	lfm "thefontapp/internal/font/local/model"
+	lfs "thefontapp/internal/font/local/scanner"
 )
 
 type App struct {
@@ -38,5 +39,10 @@ func (a *App) DeleteFamily(paths []string) error {
 
 func (a *App) InstallGoogleFont(url string, path string) {
   gfman.InstallGoogleFont(url, path)
+}
+
+func (a *App)RetrieveZipFileNames(path string) ([]string, error) {
+  return arc.RetrieveZipFiles(path)
+
 }
 

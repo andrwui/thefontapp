@@ -1,18 +1,17 @@
-import CancelIcon from 'assets/icons/cross.svg?react'
-
+import { X } from 'lucide-react'
+import { LucideIcon } from 'lucide-react'
 import React, { ChangeEvent, FocusEvent, useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 type BigInputProps = {
-  Icon: React.FunctionComponent<
-    React.SVGProps<SVGSVGElement> & {
-      title?: string | undefined
-    }
-  >
+  floating?: boolean
+  icon: LucideIcon
   inputClassName?: string
 } & React.HTMLProps<HTMLInputElement>
 
 const BigInput = ({
-  Icon,
+  floating,
+  icon: Icon,
   value,
   onBlur,
   onFocus,
@@ -59,9 +58,18 @@ const BigInput = ({
   }
 
   return (
-    <div className={`relative flex items-center w-full px-5 ${className}`}>
+    <div
+      className={twMerge(
+        'relative flex w-full items-center px-5',
+        floating && 'rounded-md border-1 border-neutral-800 bg-neutral-900',
+        className,
+      )}
+    >
       <Icon
-        className={`absolute  *:fill-neutral-600 size-4 transition-all duration-100 ${isFocused ? 'opacity-0 left-0' : 'opacity-100 left-5'}`}
+        className={twMerge(
+          'absolute left-5 size-4 opacity-100 transition-all duration-100 *:stroke-neutral-600',
+          isFocused && 'left-0 opacity-0',
+        )}
       />
       <input
         {...rest}
@@ -70,12 +78,16 @@ const BigInput = ({
         onChange={handleInputChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className={`w-full h-full text-base font-normal focus:outline-none outline-none placeholder:text-neutral-600 transition-all duration-100 ${isFocused ? 'pl-0' : 'pl-5'} ${inputClassName}`}
+        className={twMerge(
+          'h-full w-full pl-5 text-base font-normal transition-all duration-100 outline-none placeholder:text-neutral-600 focus:outline-none',
+          isFocused && 'pl-0',
+          inputClassName,
+        )}
       />
       {inputValue && (
-        <CancelIcon
+        <X
           onClick={handleReset}
-          className="absolute right-5 bottom-0 transform -translate-y-4 size-3 cursor-pointer"
+          className="absolute right-5 bottom-0 size-3 -translate-y-4 transform cursor-pointer"
         />
       )}
     </div>
