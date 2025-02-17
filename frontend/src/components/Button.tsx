@@ -10,8 +10,8 @@ const Button = ({ variant = 'default', children, className, ...rest }: ButtonPro
     <button
       className={twMerge(
         'cursor-pointer rounded-md bg-neutral-900 px-3 py-1 transition-all duration-200 hover:brightness-130',
-        variant === 'danger' && 'bg-red-700 text-neutral-50 hover:brightness-130',
-        variant === 'cta' && 'bg-neutral-50 text-neutral-950',
+        variant === 'danger' && 'bg-red-700 font-semibold text-neutral-50',
+        variant === 'cta' && 'bg-neutral-50 font-semibold text-neutral-950 hover:brightness-85',
         className,
       )}
       {...rest}

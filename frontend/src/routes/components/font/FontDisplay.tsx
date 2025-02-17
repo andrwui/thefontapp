@@ -42,7 +42,7 @@ const FontDisplay = ({
   }, [previewText, fontName])
 
   const handleInputBlur = () => {
-    if (!displayText) {
+    if (!displayText || !displayText.trim()) {
       setDisplayText(previewText.trim() || fontName)
     }
 
@@ -78,14 +78,19 @@ const FontDisplay = ({
   if (isGoogle && !fontLoaded)
     return (
       <div style={styles}>
-        <Spinner />
+        <Spinner size={fontSize} />
       </div>
     )
 
   return (
-    <div className={twMerge('flex items-center gap-5', itemAlign)}>
+    <div
+      className={twMerge(
+        'flex items-center gap-5 rounded-lg transition-all duration-100',
+        itemAlign,
+      )}
+    >
       <input
-        className={`order-2 w-full cursor-text bg-transparent px-2 outline-none`}
+        className={`order-2 w-full cursor-text bg-transparent px-2 outline-none selection:bg-neutral-50 selection:text-neutral-50`}
         onChange={handleInputChange}
         onBlur={handleInputBlur}
         onFocus={handleInputFocus}

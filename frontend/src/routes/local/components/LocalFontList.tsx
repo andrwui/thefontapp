@@ -31,6 +31,7 @@ const LocalFontList = () => {
             <FontWrapper>
               <FontToolbar>
                 <FontName>{font.name}</FontName>
+                <p>{font.variants.length}</p>
                 <CopyFontName fontName={font.name} />
                 <DeleteFont
                   fontPaths={font.variants.map((f) => f.path)}

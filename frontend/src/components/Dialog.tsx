@@ -22,7 +22,7 @@ const Dialog = ({ isOpen, onClose, children, className }: DialogProps) => {
           onClick={onClose}
         >
           <motion.div
-            className={twMerge('h-fit w-max rounded-lg bg-neutral-950 px-4 py-4', className)}
+            className={twMerge('h-fit w-max rounded-lg bg-neutral-950 p-10', className)}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}

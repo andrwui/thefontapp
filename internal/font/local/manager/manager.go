@@ -1,12 +1,12 @@
 package manager
 
 import (
-  "path/filepath"
-  "fmt"
-  "os"
-  "io"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
 
-  "thefontapp/internal/common/paths"
+	"thefontapp/internal/helper/paths"
 )
 
 func InstallLocalFont(path string) {
@@ -36,4 +36,18 @@ func InstallLocalFont(path string) {
 
 	inputFile.Close()
 
+}
+
+func DeleteFamily(paths []string) error {
+
+	for _, p := range paths {
+		fmt.Printf("%s %s %s\n", "[LOG]", "Deleting file:", p)
+		err := os.Remove(p)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
+
+	return nil
 }

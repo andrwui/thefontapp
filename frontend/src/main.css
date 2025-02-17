@@ -6,7 +6,7 @@ html {
   font-size: 14px;
   font-family: geist_local;
   @apply bg-neutral-950;
-  @apply text-neutral-50; 
+  @apply text-neutral-50;
   @apply font-light;
 }
 
@@ -19,6 +19,5 @@ html {
 
 body * {
   @apply select-none;
-  @apply selection:bg-neutral-50;
-  @apply selection:text-neutral-950;
+  scrollbar-gutter: auto;
 }

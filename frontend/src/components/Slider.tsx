@@ -22,7 +22,7 @@ const Slider = ({ label, unit, onReset, ...sliderProps }: CustomSliderProps) => 
       <div className="flex w-full flex-col gap-1">
         <p className="text-sm">{label}</p>
         <RadixSlider.Root
-          className="relative flex h-5 w-full touch-none items-center select-none"
+          className="relative flex h-5 w-full cursor-pointer touch-none items-center select-none"
           {...sliderProps}
         >
           <RadixSlider.Track className="relative h-1 grow bg-neutral-900">

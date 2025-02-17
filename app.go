@@ -2,47 +2,72 @@ package main
 
 import (
 	"context"
+	"fmt"
 
-	arc "thefontapp/internal/font/common/archive"
-	cfm "thefontapp/internal/font/common/manager"
+	appconfig "thefontapp/internal/app_config"
+	"thefontapp/internal/archive"
 	gfman "thefontapp/internal/font/google/manager"
 	lfman "thefontapp/internal/font/local/manager"
-	lfm "thefontapp/internal/font/local/model"
-	lfs "thefontapp/internal/font/local/scanner"
+	lfmod "thefontapp/internal/font/local/model"
+	lfsca "thefontapp/internal/font/local/scanner"
+	"thefontapp/internal/helper/paths"
 )
 
 type App struct {
-  ctx context.Context
+	ctx context.Context
 }
 
 func NewApp() *App {
-  return &App{}
+	return &App{}
 }
 
 func (a *App) startup(ctx context.Context) {
-  a.ctx = ctx
+	a.ctx = ctx
 }
 
-func (a *App) GetLocalFonts() []lfm.FontFamily {
-  return lfs.GetLocalFonts()
+func (a *App) GetLocalFonts() []lfmod.FontFamily {
+	return lfsca.GetLocalFonts()
 }
-
 
 func (a *App) InstallLocalFont(path string) {
-  lfman.InstallLocalFont(path)
+	lfman.InstallLocalFont(path)
 
 }
 func (a *App) DeleteFamily(paths []string) error {
-  return cfm.DeleteFamily(paths)
+	return lfman.DeleteFamily(paths)
 }
 
-
-func (a *App) InstallGoogleFont(url string, path string) {
-  gfman.InstallGoogleFont(url, path)
+func (a *App) InstallGoogleFont(url string, path string) error {
+	return gfman.InstallGoogleFont(url, path)
 }
 
-func (a *App)RetrieveZipFileNames(path string) ([]string, error) {
-  return arc.RetrieveZipFiles(path)
-
+func (a *App) GetLocalFontDirectories() ([]string, error) {
+	return appconfig.GetLocalFontDirectories()
 }
 
+func (a *App) ListArchiveFiles(archivePath string) ([]string, error) {
+
+	tmpDir, err := paths.GetTempPath()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(tmpDir)
+	err = archive.ExtractZipFile(archivePath, tmpDir)
+	if err != nil {
+		return nil, err
+	}
+
+	tmpFiles, err := paths.GetDirectoryFiles(tmpDir)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(tmpFiles)
+
+	return tmpFiles, nil
+}
+
+func (a *App) CleanTmpDir() error {
+	return paths.CleanTmpDir()
+
+}

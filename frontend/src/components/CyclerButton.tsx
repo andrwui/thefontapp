@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 
 type CyclerButtonOption = {
   icon: ReactElement
@@ -7,27 +7,29 @@ type CyclerButtonOption = {
 
 type CyclerButtonProps = {
   options: CyclerButtonOption[]
-  onClick: (_: any) => void
+  value: string | number | boolean
+  onChange: (value: any) => void
 }
 
-const CyclerButton = ({ options, onClick }: CyclerButtonProps) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0)
+const CyclerButton = ({ options, value, onChange }: CyclerButtonProps) => {
+  const currentIndex = options.findIndex((option) => option.value === value)
 
   const handleClick = () => {
     const nextIndex = (currentIndex + 1) % options.length
-    setCurrentIndex(nextIndex)
-
-    onClick(options[nextIndex].value)
+    onChange(options[nextIndex].value)
   }
+
+  const displayIndex = currentIndex === -1 ? 0 : currentIndex
 
   return (
     <button
-      className="grid aspect-square w-20 place-items-center p-2"
+      className="grid aspect-square w-20 cursor-pointer place-items-center rounded-md bg-neutral-900 p-2 active:scale-95"
       onClick={handleClick}
     >
-      {options[currentIndex].icon}
+      {options[displayIndex].icon}
     </button>
   )
 }
 
 export default CyclerButton
+

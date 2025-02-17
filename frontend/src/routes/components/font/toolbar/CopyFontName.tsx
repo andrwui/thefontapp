@@ -11,11 +11,11 @@ const CopyFontName = ({ fontName }: { fontName: string }) => {
     setIsLoading(true)
     navigator.clipboard.writeText(fontName).then(() => {
       setIsLoading(false)
-      toast.correct(`"${fontName}" copied to the clipboard.`)
+      toast.success(`"${fontName}" copied to the clipboard.`)
     })
   }
 
-  if (isLoading) return <Spinner size="sm" />
+  if (isLoading) return <Spinner size={16} />
 
   return (
     <ToolbarIconButton

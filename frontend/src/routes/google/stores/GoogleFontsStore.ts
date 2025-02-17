@@ -13,7 +13,6 @@ export const useGoogleFontsStore = create<GoogleFontsStore>((set) => ({
   loadingGoogleFonts: false,
   googleFontsHasError: false,
   getGoogleFonts: () => {
-    console.log(import.meta.env.VITE_GOOGLE_FONTS_API_KEY)
     set({ loadingGoogleFonts: true })
     fetch(
       `https://www.googleapis.com/webfonts/v1/webfonts?key=${import.meta.env.VITE_GOOGLE_FONTS_API_KEY}`,

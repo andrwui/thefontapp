@@ -13,8 +13,6 @@ const NavigationLink = ({
 }) => {
   const curLocation = useLocation().pathname
 
-  console.log(curLocation)
-
   const isCurrentLocation = curLocation === to
 
   return (
