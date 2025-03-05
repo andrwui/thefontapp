@@ -22,8 +22,8 @@ export function InstallGoogleFont(arg1, arg2) {
   return window['go']['main']['App']['InstallGoogleFont'](arg1, arg2);
 }
 
-export function InstallLocalFont(arg1) {
-  return window['go']['main']['App']['InstallLocalFont'](arg1);
+export function InstallLocalFont(arg1, arg2) {
+  return window['go']['main']['App']['InstallLocalFont'](arg1, arg2);
 }
 
 export function ListArchiveFiles(arg1) {

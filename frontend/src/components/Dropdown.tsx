@@ -13,8 +13,9 @@ type DropdownProps = {
   options: DropdownOption[]
   value: any
   onChange: (value: any) => void
+  hasError: boolean
 }
-const Dropdown = ({ placeholder, options, value, onChange }: DropdownProps) => {
+const Dropdown = ({ placeholder, options, value, onChange, hasError }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const activatorRef = useRef(null)
@@ -33,7 +34,8 @@ const Dropdown = ({ placeholder, options, value, onChange }: DropdownProps) => {
         ref={activatorRef}
         className={twMerge(
           'flex h-10 w-full items-center justify-between rounded-md border border-neutral-800 bg-neutral-900 px-2 font-normal',
-          !value && 'text-neutral-500',
+          !(value.trim() !== '') && 'text-neutral-500',
+          hasError && 'border-red-500',
         )}
         onClick={() => setIsOpen((s) => !s)}
       >

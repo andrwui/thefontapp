@@ -1,15 +1,8 @@
+import FontFileSelector from './components/ArchiveFileSelector'
 import { useLocalFontStore } from './stores/LocalFontStore'
-import Button from 'components/Button'
-import Checkbox from 'components/Checkbox'
-import Dialog from 'components/Dialog'
-import Dropdown from 'components/Dropdown'
+import { ArchiveItem } from './types'
 import Dropzone from 'components/Dropzone'
-import {
-  CleanTmpDir,
-  GetLocalFontDirectories,
-  InstallLocalFont,
-  ListArchiveFiles,
-} from 'go/main/App'
+import { ListArchiveFiles, InstallLocalFont } from 'go/main/App'
 import { Download } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -18,28 +11,16 @@ import FontList from 'routes/local/components/LocalFontList'
 import { OnFileDrop, OnFileDropOff } from 'runtime/runtime'
 import toast from 'utils/toast'
 
-type ArchiveItem = { path: string; selected: boolean }
-
 const Local = () => {
   const { getRootProps, isDragActive } = useDropzone()
   const { getLocalFonts } = useLocalFontStore()
 
   const [fileSelectIsOpen, setFileSelectIsOpen] = useState<boolean>(false)
-  const [archiveFiles, setArchiveFiles] = useState<ArchiveItem[]>([] as ArchiveItem[])
-  const [fontDirectories, setFontDirectories] = useState<string[]>([])
-  const [destination, setDestination] = useState<any>()
+  const [archiveFiles, setArchiveFiles] = useState<ArchiveItem[]>([])
 
   useEffect(() => {
-    GetLocalFontDirectories().then(setFontDirectories)
+    getLocalFonts()
   }, [])
-
-  const handleArchiveSelection = (archiveItem: ArchiveItem) => {
-    setArchiveFiles((prevState) =>
-      prevState.map((item) =>
-        item.path === archiveItem.path ? { ...item, selected: !item.selected } : item,
-      ),
-    )
-  }
 
   useEffect(() => {
     OnFileDrop(async (__, _, paths) => {
@@ -47,14 +28,10 @@ const Local = () => {
         const ext = path.split('.').pop()?.toLowerCase()
 
         if (ext === 'otf' || ext === 'ttf') {
-          await InstallLocalFont(path)
-
+          await InstallLocalFont(path, '/usr/share/fonts/')
           getLocalFonts()
-
           toast.success('Font installed successfully.')
         } else if (ext === 'zip' || ext === 'rar' || ext === 'tar' || ext === 'gz') {
-          setFileSelectIsOpen(true)
-
           const fns = await ListArchiveFiles(path)
 
           const curatedArchiveFiles = fns
@@ -72,12 +49,13 @@ const Local = () => {
               selected: true,
             }))
 
-          setArchiveFiles(curatedArchiveFiles)
           if (curatedArchiveFiles.length < 1) {
             toast.error('The archive does not contain font files.')
-
-            setFileSelectIsOpen(false)
+            return
           }
+
+          setArchiveFiles(curatedArchiveFiles)
+          setFileSelectIsOpen(true)
         } else {
           toast.error('File format not supported.')
         }
@@ -89,31 +67,9 @@ const Local = () => {
 
   const rootProps = getRootProps()
 
-  const handleDestinationChange = (value: string) => {
-    setDestination(value)
-  }
   const handleFileSelectClose = () => {
-    CleanTmpDir()
     setFileSelectIsOpen(false)
-  }
-  const handleFileSelectionConfirm = () => {
-    setFileSelectIsOpen(false)
-    const selectedFilePaths = archiveFiles.filter((f) => f.selected).map((f) => f.path)
-    const toastID = toast.loading('Installing font from archive...')
-    selectedFilePaths.forEach((path) => {
-      toast.loading(`Installing ${path.split('/').pop()}...`, toastID)
-      InstallLocalFont(path)
-        .then(() => {
-          toast.success('Fonts in archive installed successfully.', toastID)
-        })
-        .catch(() => {
-          toast.error(`Could not install font ${path.split('/').pop()}.`)
-        })
-        .finally(async () => {
-          await CleanTmpDir()
-          getLocalFonts()
-        })
-    })
+    setArchiveFiles([])
   }
 
   return (
@@ -121,47 +77,6 @@ const Local = () => {
       {...rootProps}
       className="h-full"
     >
-      <Dialog
-        isOpen={fileSelectIsOpen}
-        onClose={handleFileSelectClose}
-        className="w-200 max-w-200"
-      >
-        <div className="flex w-full flex-col gap-10">
-          <div>
-            <h1 className="text-3xl font-bold">Select the fonts to install</h1>
-          </div>
-          <div className="flex max-h-80 flex-col gap-5 overflow-scroll pr-5">
-            {archiveFiles.map((archive) => (
-              <label className="flex gap-5">
-                <Checkbox
-                  checked={archive.selected}
-                  onCheckedChange={() => handleArchiveSelection(archive)}
-                />
-                <p>{archive.path.split('/').pop()}</p>
-              </label>
-            ))}
-          </div>
-          <div className="flex flex-col gap-2">
-            <p>Destination path</p>
-            <Dropdown
-              value={destination}
-              onChange={handleDestinationChange}
-              options={fontDirectories.map((d) => ({ display: d, value: d }))}
-              placeholder="destination..."
-            />
-          </div>
-        </div>
-        <div className="flex w-full justify-end gap-5 pt-10">
-          <Button onClick={handleFileSelectClose}>Cancel</Button>
-          <Button
-            variant="cta"
-            onClick={handleFileSelectionConfirm}
-          >
-            Confirm
-          </Button>
-        </div>
-      </Dialog>
-
       {isDragActive && (
         <Dropzone>
           <div className="grid h-[50vh] w-[60vw] place-items-center rounded-lg bg-neutral-950 outline-offset-4 outline-neutral-900 outline-dashed">
@@ -176,10 +91,18 @@ const Local = () => {
           </div>
         </Dropzone>
       )}
+
       <div className="col-start-2 flex h-full w-full flex-col overflow-y-auto">
         <FontList />
         <ConfigPanel />
       </div>
+
+      <FontFileSelector
+        isOpen={fileSelectIsOpen}
+        onClose={handleFileSelectClose}
+        archiveFiles={archiveFiles}
+        onSuccess={getLocalFonts}
+      />
     </div>
   )
 }

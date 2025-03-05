@@ -7,6 +7,7 @@ import CopyFontName from 'routes/components/font/toolbar/CopyFontName'
 import DeleteFont from 'routes/components/font/toolbar/DeleteFont'
 import FontName from 'routes/components/font/toolbar/FontName'
 import FontToolbar from 'routes/components/font/toolbar/FontToolbar'
+import SelectFontFamily from 'routes/components/font/toolbar/SelectFontFamily'
 import { useLocalFontStore } from 'routes/local/stores/LocalFontStore'
 import useSearchStore from 'routes/stores/useSearchStore'
 
@@ -30,6 +31,7 @@ const LocalFontList = () => {
           return (
             <FontWrapper>
               <FontToolbar>
+                <SelectFontFamily font={font} />
                 <FontName>{font.name}</FontName>
                 <p>{font.variants.length}</p>
                 <CopyFontName fontName={font.name} />

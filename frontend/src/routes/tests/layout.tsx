@@ -106,6 +106,7 @@ const Tests = () => {
           <div className="flex flex-col gap-2">
             <p>Destination path</p>
             <Dropdown
+              hasError
               value={destPath}
               onChange={handlePathChange}
               options={paths}

@@ -5,5 +5,4 @@ var FontDirs = []string{
 	"/usr/local/share/fonts",
 	"~/.fonts",
 	"~/.local/share/fonts",
-	"~/fuentes_prueba",
 }

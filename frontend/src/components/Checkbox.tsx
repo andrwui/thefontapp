@@ -10,7 +10,7 @@ const Checkbox = ({ onCheckedChange, checked, className, ...rest }: CheckboxProp
     <RadixCheckbox.Root
       {...rest}
       className={twMerge(
-        'flex h-5 w-5 cursor-pointer items-center justify-center rounded-xs border border-neutral-800 bg-neutral-900 transition-all duration-100 active:brightness-125',
+        'flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm border border-neutral-800 bg-neutral-900 transition-all duration-100 active:brightness-125',
         checked && 'bg-neutral-50 active:brightness-75',
         className,
       )}

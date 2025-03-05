@@ -23,14 +23,15 @@ func NewApp() *App {
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	a.CleanTmpDir()
 }
 
 func (a *App) GetLocalFonts() []lfmod.FontFamily {
 	return lfsca.GetLocalFonts()
 }
 
-func (a *App) InstallLocalFont(path string) {
-	lfman.InstallLocalFont(path)
+func (a *App) InstallLocalFont(fontPath, destPath string) error {
+	return lfman.InstallLocalFont(fontPath, destPath)
 
 }
 func (a *App) DeleteFamily(paths []string) error {

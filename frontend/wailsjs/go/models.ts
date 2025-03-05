@@ -2,6 +2,7 @@ export namespace font {
 	
 	export class FontVariant {
 	    name: string;
+	    FamilyName: string;
 	    path: string;
 	    readonly: boolean;
 	
@@ -12,6 +13,7 @@ export namespace font {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.name = source["name"];
+	        this.FamilyName = source["FamilyName"];
 	        this.path = source["path"];
 	        this.readonly = source["readonly"];
 	    }

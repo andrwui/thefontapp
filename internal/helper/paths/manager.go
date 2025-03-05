@@ -8,12 +8,14 @@ import (
 )
 
 func ExpandHomeDir(path string) string {
-	home, _ := os.UserHomeDir()
-	if path[:2] == "~/" {
+	if strings.HasPrefix(path, "~/") {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return path
+		}
 		return filepath.Join(home, path[2:])
-	} else {
-		return filepath.Join(home, path)
 	}
+	return path
 }
 
 func GetFileExtension(filepath string) string {

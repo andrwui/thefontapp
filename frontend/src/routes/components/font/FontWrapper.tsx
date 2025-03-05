@@ -1,4 +1,4 @@
-import { createContext, Dispatch, ReactElement, SetStateAction, useState } from 'react'
+import { createContext, Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 
 export const FontFocusContext = createContext(
   {} as { isFocused: boolean; setIsFocused: Dispatch<SetStateAction<boolean>> },

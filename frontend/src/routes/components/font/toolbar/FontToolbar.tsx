@@ -1,8 +1,12 @@
+import { FontFocusContext } from '../FontWrapper'
+import { useContext } from 'react'
 import useFontSettingsStore from 'routes/stores/useFontSettingsStore'
 import { twMerge } from 'tailwind-merge'
 
 const FontToolbar = ({ children }: { children: any }) => {
   const { textAlign } = useFontSettingsStore()
+
+  const { isFocused } = useContext(FontFocusContext)
 
   const itemAlign =
     textAlign === 'left'
@@ -12,7 +16,15 @@ const FontToolbar = ({ children }: { children: any }) => {
         : 'justify-end'
 
   return (
-    <div className={twMerge('flex h-min w-full items-center gap-2', itemAlign)}>{children}</div>
+    <div
+      className={twMerge(
+        'relative flex h-min w-full items-center gap-2 transition-all duration-100 group-hover:pl-6',
+        itemAlign,
+        isFocused && 'pl-6',
+      )}
+    >
+      {children}
+    </div>
   )
 }
 export default FontToolbar

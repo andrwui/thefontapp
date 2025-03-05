@@ -4,38 +4,36 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 
 	"thefontapp/internal/helper/paths"
 )
 
-func InstallLocalFont(path string) {
-	var fontsPath = paths.ExpandHomeDir("~/.local/share/fonts")
-	var fileName = filepath.Base(path)
-	var destPath = filepath.Join(fontsPath, fileName)
+func InstallLocalFont(fontPath string, destPath string) error {
+	destPath = path.Join(paths.ExpandHomeDir(destPath), filepath.Base(fontPath))
 
-	fmt.Println(destPath)
-
-	inputFile, err := os.Open(path)
+	inputFile, err := os.Open(fontPath)
 
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer inputFile.Close()
 
-	outputFile, err := os.Create(destPath)
+	outputFile, err := os.Create(filepath.Join(destPath))
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer outputFile.Close()
 
 	_, err = io.Copy(outputFile, inputFile)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	inputFile.Close()
 
+	return nil
 }
 
 func DeleteFamily(paths []string) error {
