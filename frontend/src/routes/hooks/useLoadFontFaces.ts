@@ -31,19 +31,32 @@ const parseVariantStyle = (variantName: string): { weight: number; style: string
 const useLoadFontFaces = (fonts: font.FontFamily[]) => {
   useEffect(() => {
     const loadedFonts: FontFace[] = []
+    console.log('Loading fonts', fonts)
+
     fonts.forEach((fontFamily) => {
       fontFamily.variants.forEach((variant) => {
         const { weight, style } = parseVariantStyle(variant.name)
-        const fontFace = new FontFace(fontFamily.name, `url("wails:///${variant.path}")`, {
+
+        const fontFace = new FontFace(fontFamily.name, `url("/wails/${variant.path}")`, {
           weight: weight.toString(),
           style,
         })
+
+        console.log(`Loading font: ${fontFamily.name} (${variant.name}) from ${variant.path}`)
+
         loadedFonts.push(fontFace)
-        fontFace.load().then(() => {
-          document.fonts.add(fontFace)
-        })
+        fontFace
+          .load()
+          .then(() => {
+            console.log(`Successfully loaded font: ${fontFamily.name} (${variant.name})`)
+            document.fonts.add(fontFace)
+          })
+          .catch((err) => {
+            console.error(`Failed to load font: ${fontFamily.name} (${variant.name})`, err)
+          })
       })
     })
+
     return () => {
       loadedFonts.forEach((font) => {
         document.fonts.delete(font)

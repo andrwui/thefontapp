@@ -28,7 +28,7 @@ const Navigation = () => {
           <p className="font-thin">{googleFonts.length}</p>
         </div>
       </NavigationLink>
-      <NavigationLink
+      {/* <NavigationLink
         to="/preview"
         Icon={<Eye size={16} />}
       >
@@ -45,7 +45,7 @@ const Navigation = () => {
         Icon={<TestTube size={16} />}
       >
         Tests
-      </NavigationLink>
+      </NavigationLink> */}
     </div>
   )
 }

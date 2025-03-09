@@ -1,19 +1,72 @@
-# README
+<p align="center" style="text-align: center">
+  <img src="./readme_assets/banner.png" width="100%"><br/>
+</p>
 
-## About
+ thefontapp is a modern, open source font manager.
 
-This is the official Wails React-TS template.
+---
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+### why?
 
-## Live Development
+font managers meet at least one of the following characteristics:
+- it lacks features
+- it was made 20 years ago
+- it has basic features hidden behind a paywall
+- it looks ugly
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+thefontapp is here to solve this problem. 
 
-## Building
+---
 
-To build a redistributable, production mode package, use `wails build`.
+### how?
+thefontapp runs on [wails](https://github.com/wailsapp/wails), so we're able to pack a stupidly fast system integration, with a pretty face.
+
+---
+
+### features (current and planned)
+#### manage  
+- [x] install fonts (drag and drop)
+    - [x] from otf and ttf files.
+    - [x] from zip archives.
+    - [ ] from rar archives.
+    - [ ] from tar archives.
+- [x] uninstall font families
+    - [ ] uninstall singular style from font family
+- [ ] move fonts between folders
+- [ ] attach licences to font
+- [ ] bulk actions
+
+#### preview
+- [x] filter by font name
+- [x] change font size, weight, letter spacing, style and alignment
+- [x] change display text globally and independently
+
+#### google fonts integration
+- [x] all from [preview](#preview)
+- [x] install google fonts
+    - [ ] select styles to install
+
+#### organize
+- [ ] add source folders
+- [ ] add families to favorites
+- [ ] add tags to families
+- [ ] create collections
+
+i probably am forgetting a lot of things though, so i will be updating.
+
+---
+
+### installation
+there is not an installation, the app is just a binary file.
+
+i use linux so the only build script i made is for linux.
+
+you're probably good with the wails cli though, it's pretty good.
+    
+i just use `wails build -clean -platform [platform]`.
+
+[here](https://wails.io/docs/reference/cli#platforms) is the list with available wails platforms.
+
+---
+
+#### thanks y'all for reading <3
