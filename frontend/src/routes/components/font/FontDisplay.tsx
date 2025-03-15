@@ -64,7 +64,7 @@ const FontDisplay = ({
         : 'justify-end'
 
   const styles = {
-    fontFamily: fontName,
+    fontFamily: `'${fontName}'`,
     fontSize: `${fontSize}px`,
     letterSpacing: `${letterSpacing}em`,
     lineHeight: `${fontSize * 1.5}px`,
