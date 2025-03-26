@@ -1,14 +1,15 @@
 import FontFileSelector from './components/ArchiveFileSelector'
 import { useLocalFontStore } from './stores/LocalFontStore'
-import { ArchiveItem } from './types'
 import Dropzone from 'components/Dropzone'
-import { ListArchiveFiles, InstallLocalFont } from 'go/main/App'
+import { ListArchiveContents, InstallLocalFont } from 'go/main/App'
 import { Download } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import ConfigPanel from 'routes/components/config_panel/ConfigPanel'
 import FontList from 'routes/local/components/LocalFontList'
 import { OnFileDrop, OnFileDropOff } from 'runtime/runtime'
+import { curateArchiveFiles } from 'utils/fonts'
+import { getFileExtension } from 'utils/strings'
 import toast from 'utils/toast'
 
 const Local = () => {
@@ -16,7 +17,7 @@ const Local = () => {
   const { getLocalFonts } = useLocalFontStore()
 
   const [fileSelectIsOpen, setFileSelectIsOpen] = useState<boolean>(false)
-  const [archiveFiles, setArchiveFiles] = useState<ArchiveItem[]>([])
+  const [archiveFilenames, setArchiveFilenames] = useState<string[]>([])
 
   useEffect(() => {
     getLocalFonts()
@@ -25,36 +26,34 @@ const Local = () => {
   useEffect(() => {
     OnFileDrop(async (__, _, paths) => {
       for (const path of paths) {
-        const ext = path.split('.').pop()?.toLowerCase()
+        const ext = getFileExtension(path)
+
+        if (!ext) {
+          toast.error('File does not have an extension.')
+          return
+        }
 
         if (ext === 'otf' || ext === 'ttf') {
-          await InstallLocalFont(path, '/usr/share/fonts/')
+          await InstallLocalFont(path, '~/.local/share/fonts/')
           getLocalFonts()
           toast.success('Font installed successfully.')
-        } else if (ext === 'zip' || ext === 'rar' || ext === 'tar' || ext === 'gz') {
-          const fns = await ListArchiveFiles(path)
+        } else if (
+          ext === 'zip' ||
+          ext === 'rar' ||
+          ext === 'tar' ||
+          ext === 'gz' ||
+          ext === '7z'
+        ) {
+          const filenames = await ListArchiveContents(path)
+          const curatedArchiveFilenames = curateArchiveFiles(filenames)
+          console.log(curatedArchiveFilenames)
 
-          const curatedArchiveFiles = fns
-            .filter(
-              (path) =>
-                path.includes('OFL') ||
-                path.includes('license') ||
-                path.includes('.otf') ||
-                path.includes('.ttf') ||
-                path.includes('.woff') ||
-                path.includes('.woff2'),
-            )
-            .map((path) => ({
-              path,
-              selected: true,
-            }))
-
-          if (curatedArchiveFiles.length < 1) {
-            toast.error('The archive does not contain font files.')
+          if (curatedArchiveFilenames.length < 1) {
+            toast.error('The archive does not contain any font file or licence.')
             return
           }
 
-          setArchiveFiles(curatedArchiveFiles)
+          setArchiveFilenames(curatedArchiveFilenames)
           setFileSelectIsOpen(true)
         } else {
           toast.error('File format not supported.')
@@ -69,7 +68,7 @@ const Local = () => {
 
   const handleFileSelectClose = () => {
     setFileSelectIsOpen(false)
-    setArchiveFiles([])
+    setArchiveFilenames([])
   }
 
   return (
@@ -100,7 +99,7 @@ const Local = () => {
       <FontFileSelector
         isOpen={fileSelectIsOpen}
         onClose={handleFileSelectClose}
-        archiveFiles={archiveFiles}
+        archiveFilenames={archiveFilenames}
         onSuccess={getLocalFonts}
       />
     </div>

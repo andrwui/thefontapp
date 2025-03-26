@@ -1,7 +1,6 @@
 package paths
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -64,7 +63,6 @@ func CleanTmpDir() error {
 func GetDirectoryFiles(rootDir string) ([]string, error) {
 
 	var files []string
-	fmt.Printf("ROOTDIR: %s", rootDir)
 
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {

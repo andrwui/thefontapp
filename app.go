@@ -3,14 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-
 	appconfig "thefontapp/internal/app_config"
 	"thefontapp/internal/archive"
 	gfman "thefontapp/internal/font/google/manager"
 	lfman "thefontapp/internal/font/local/manager"
 	lfmod "thefontapp/internal/font/local/model"
 	lfsca "thefontapp/internal/font/local/scanner"
-	"thefontapp/internal/helper/paths"
 )
 
 type App struct {
@@ -23,7 +21,6 @@ func NewApp() *App {
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-	a.CleanTmpDir()
 }
 
 func (a *App) GetLocalFonts() []lfmod.FontFamily {
@@ -46,29 +43,16 @@ func (a *App) GetLocalFontDirectories() ([]string, error) {
 	return appconfig.GetLocalFontDirectories()
 }
 
-func (a *App) ListArchiveFiles(archivePath string) ([]string, error) {
+func (a *App) ListArchiveContents(archivePath string) ([]string, error) {
 
-	tmpDir, err := paths.GetTempPath()
+	contents, err := archive.ListArchiveContents(archivePath)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println(tmpDir)
-	err = archive.ExtractZipFile(archivePath, tmpDir)
-	if err != nil {
-		return nil, err
+	for _, entry := range contents {
+		fmt.Printf("%s\n", entry)
 	}
 
-	tmpFiles, err := paths.GetDirectoryFiles(tmpDir)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(tmpFiles)
-
-	return tmpFiles, nil
-}
-
-func (a *App) CleanTmpDir() error {
-	return paths.CleanTmpDir()
-
+	return contents, err
 }

@@ -1,26 +1,31 @@
-import { ArchiveItem } from '../types'
 import Button from 'components/Button'
 import Checkbox from 'components/Checkbox'
 import Dialog from 'components/Dialog'
 import Dropdown from 'components/Dropdown'
-import { InstallLocalFont, CleanTmpDir, GetLocalFontDirectories } from 'go/main/App'
+import { InstallLocalFont, GetLocalFontDirectories } from 'go/main/App'
 import { useState, useEffect } from 'react'
+import { getFileNameFromCompletePath } from 'utils/strings'
 import toast from 'utils/toast'
+
+type ArchiveFile = {
+  path: string
+  selected: boolean
+}
 
 interface FontFileSelectorProps {
   isOpen: boolean
   onClose: () => void
-  archiveFiles: ArchiveItem[]
+  archiveFilenames: string[]
   onSuccess: () => void
 }
 
 const FontFileSelector = ({
   isOpen,
   onClose,
-  archiveFiles: initialArchiveFiles,
+  archiveFilenames,
   onSuccess,
 }: FontFileSelectorProps) => {
-  const [archiveFiles, setArchiveFiles] = useState<ArchiveItem[]>(initialArchiveFiles)
+  const [archiveFiles, setArchiveFiles] = useState<ArchiveFile[]>([])
   const [fontDirectories, setFontDirectories] = useState<string[]>([])
   const [destination, setDestination] = useState<string>('/')
   const [error, setError] = useState<string>('')
@@ -33,13 +38,15 @@ const FontFileSelector = ({
   }, [])
 
   useEffect(() => {
-    setArchiveFiles(initialArchiveFiles)
-  }, [initialArchiveFiles])
+    if (archiveFilenames) {
+      setArchiveFiles(archiveFilenames.map((af) => ({ path: af, selected: true })))
+    }
+  }, [archiveFilenames])
 
-  const handleArchiveSelection = (archiveItem: ArchiveItem) => {
+  const handleArchiveSelection = (archiveFile: ArchiveFile) => {
     setArchiveFiles((prevState) =>
       prevState.map((item) =>
-        item.path === archiveItem.path ? { ...item, selected: !item.selected } : item,
+        item.path === archiveFile.path ? { ...item, selected: !item.selected } : item,
       ),
     )
   }
@@ -49,10 +56,8 @@ const FontFileSelector = ({
   }
 
   const handleClose = () => {
-    CleanTmpDir()
     setError('')
     setDestination('')
-
     onClose()
   }
 
@@ -60,25 +65,25 @@ const FontFileSelector = ({
     onClose()
 
     const selectedFilePaths = archiveFiles.filter((f) => f.selected).map((f) => f.path)
-    const toastID = toast.loading('Installing font from archive...')
+    const toastID = toast.loading('Installing fonts from archive...')
 
     selectedFilePaths.forEach((path) => {
-      toast.loading(`Installing ${path.split('/').pop()}...`, toastID)
+      const fileName = getFileNameFromCompletePath(path)
+
+      toast.loading(`Installing ${fileName}...`, toastID)
+
       InstallLocalFont(path, destination)
         .then(() => {
-          toast.success('Fonts in archive installed successfully.', toastID)
+          toast.success(`Font ${fileName} installed successfully.`, toastID)
         })
         .catch(() => {
-          toast.error(`Could not install font ${path.split('/').pop()}.`)
-          toast.error(`Could not install fonts from archive.`, toastID)
-        })
-        .finally(async () => {
-          await CleanTmpDir()
-          onSuccess()
-          setError('')
-          setDestination('')
+          toast.error(`Could not install font ${fileName}.`)
         })
     })
+
+    onSuccess()
+    setError('')
+    setDestination('')
   }
 
   return (
