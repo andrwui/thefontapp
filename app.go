@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	appconfig "thefontapp/internal/app_config"
 	"thefontapp/internal/archive"
 	gfman "thefontapp/internal/font/google/manager"
@@ -44,15 +43,9 @@ func (a *App) GetLocalFontDirectories() ([]string, error) {
 }
 
 func (a *App) ListArchiveContents(archivePath string) ([]string, error) {
+	return archive.ListArchiveContents(archivePath)
+}
 
-	contents, err := archive.ListArchiveContents(archivePath)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, entry := range contents {
-		fmt.Printf("%s\n", entry)
-	}
-
-	return contents, err
+func (a *App) CopyArchiveContents(archivePath string, filePaths []string, destPath string) error {
+	return archive.CopyArchiveContents(archivePath, filePaths, destPath)
 }

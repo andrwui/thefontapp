@@ -6,14 +6,16 @@ type ButtonProps = {
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
 const Button = ({ variant = 'default', children, className, ...rest }: ButtonProps) => {
+  const styles = {
+    default:
+      'cursor-pointer rounded-md bg-neutral-900 px-3 py-1 transition-all duration-200 hover:brightness-125 disabled:cursor-not-allowed disabled:hover:brightness-100',
+    cta: 'bg-neutral-50 font-semibold text-neutral-950 hover:brightness-85 disabled:bg-neutral-900 disabled:text-neutral-800',
+    danger: 'bg-red-700 font-semibold text-neutral-50',
+  }
+
   return (
     <button
-      className={twMerge(
-        'cursor-pointer rounded-md bg-neutral-900 px-3 py-1 transition-all duration-200 hover:brightness-130',
-        variant === 'danger' && 'bg-red-700 font-semibold text-neutral-50',
-        variant === 'cta' && 'bg-neutral-50 font-semibold text-neutral-950 hover:brightness-85',
-        className,
-      )}
+      className={twMerge(styles.default, styles[variant], className)}
       {...rest}
     >
       {children}

@@ -1,4 +1,4 @@
-import FontFileSelector from './components/ArchiveFileSelector'
+import ArchiveFileSelector from './components/ArchiveFile/ArchiveFileSelector'
 import { useLocalFontStore } from './stores/LocalFontStore'
 import Dropzone from 'components/Dropzone'
 import { ListArchiveContents, InstallLocalFont } from 'go/main/App'
@@ -8,7 +8,8 @@ import { useDropzone } from 'react-dropzone'
 import ConfigPanel from 'routes/components/config_panel/ConfigPanel'
 import FontList from 'routes/local/components/LocalFontList'
 import { OnFileDrop, OnFileDropOff } from 'runtime/runtime'
-import { curateArchiveFiles } from 'utils/fonts'
+import { curateArchivePaths } from 'utils/fonts'
+import { createArchiveFileStructure, FolderNode } from 'utils/fs'
 import { getFileExtension } from 'utils/strings'
 import toast from 'utils/toast'
 
@@ -17,7 +18,8 @@ const Local = () => {
   const { getLocalFonts } = useLocalFontStore()
 
   const [fileSelectIsOpen, setFileSelectIsOpen] = useState<boolean>(false)
-  const [archiveFilenames, setArchiveFilenames] = useState<string[]>([])
+  const [fileStructure, setFileStructure] = useState<FolderNode>()
+  const [archivePath, setArchivePath] = useState<string>('')
 
   useEffect(() => {
     getLocalFonts()
@@ -45,15 +47,15 @@ const Local = () => {
           ext === '7z'
         ) {
           const filenames = await ListArchiveContents(path)
-          const curatedArchiveFilenames = curateArchiveFiles(filenames)
-          console.log(curatedArchiveFilenames)
+          const curatedArchiveFilenames = curateArchivePaths(filenames)
 
           if (curatedArchiveFilenames.length < 1) {
             toast.error('The archive does not contain any font file or licence.')
             return
           }
 
-          setArchiveFilenames(curatedArchiveFilenames)
+          setArchivePath(path)
+          setFileStructure(createArchiveFileStructure(curatedArchiveFilenames))
           setFileSelectIsOpen(true)
         } else {
           toast.error('File format not supported.')
@@ -68,7 +70,6 @@ const Local = () => {
 
   const handleFileSelectClose = () => {
     setFileSelectIsOpen(false)
-    setArchiveFilenames([])
   }
 
   return (
@@ -84,7 +85,7 @@ const Local = () => {
               <p className="text-xl">Drop fonts in here.</p>
               <div className="flex items-center gap-1">
                 <p className="text-md text-neutral-400">Supported extensions:</p>
-                <p className="text-md font-bold text-neutral-400">.otf .ttf .zip .rar</p>
+                <p className="text-md font-bold text-neutral-400">.otf .ttf .zip</p>
               </div>
             </div>
           </div>
@@ -96,12 +97,15 @@ const Local = () => {
         <ConfigPanel />
       </div>
 
-      <FontFileSelector
-        isOpen={fileSelectIsOpen}
-        onClose={handleFileSelectClose}
-        archiveFilenames={archiveFilenames}
-        onSuccess={getLocalFonts}
-      />
+      {fileStructure && (
+        <ArchiveFileSelector
+          isOpen={fileSelectIsOpen}
+          onClose={handleFileSelectClose}
+          archivePath={archivePath}
+          fileStructure={fileStructure}
+          onSuccess={getLocalFonts}
+        />
+      )}
     </div>
   )
 }

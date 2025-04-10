@@ -31,8 +31,6 @@ const parseVariantStyle = (variantName: string): { weight: number; style: string
 const useLoadFontFaces = (fonts: font.FontFamily[]) => {
   useEffect(() => {
     const loadedFonts: FontFace[] = []
-    console.log('Loading fonts', fonts)
-
     fonts.forEach((fontFamily) => {
       fontFamily.variants.forEach((variant) => {
         const { weight, style } = parseVariantStyle(variant.name)
@@ -42,13 +40,10 @@ const useLoadFontFaces = (fonts: font.FontFamily[]) => {
           style,
         })
 
-        console.log(`Loading font: ${fontFamily.name} (${variant.name}) from ${variant.path}`)
-
         loadedFonts.push(fontFace)
         fontFace
           .load()
           .then(() => {
-            console.log(`Successfully loaded font: ${fontFamily.name} (${variant.name})`)
             document.fonts.add(fontFace)
           })
           .catch((err) => {

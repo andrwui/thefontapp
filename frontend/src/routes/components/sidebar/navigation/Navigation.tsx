@@ -39,13 +39,13 @@ const Navigation = () => {
         Icon={<Settings size={16} />}
       >
         Settings
-      </NavigationLink>
+      </NavigationLink>*/}
       <NavigationLink
         to="/tests"
         Icon={<TestTube size={16} />}
       >
         Tests
-      </NavigationLink> */}
+      </NavigationLink>
     </div>
   )
 }
