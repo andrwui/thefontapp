@@ -15,19 +15,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.24.3'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with: 
-          version: 10
-
-      - name: Install Wails CLI
-        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-
       - name: Get current version
         id: get_current_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
@@ -46,23 +33,17 @@ jobs:
           echo "${CHANGELOG_CONTENT}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Build for Windows
-        run: |
-          wails build -platform windows/amd64 -o "thefontapp-Windows-${{ steps.get_current_version.outputs.VERSION }}.exe"
-        env:
-          CGO_ENABLED: 1
-
-      - name: Build for Linux
-        run: |
-          wails build -platform linux/amd64 -o "thefontapp-Linux-${{ steps.get_current_version.outputs.VERSION }}"
-        env:
-          CGO_ENABLED: 1
-
-      - name: Build for macOS
-        run: |
-          wails build -platform darwin/universal -o "thefontapp-macOS-${{ steps.get_current_version.outputs.VERSION }}.dmg"
-        env:
-          CGO_ENABLED: 1
+      - name: Build Wails App (Cross-Platform)
+        uses: dAppServer/wails-build-action@main # Updated to @main as per README
+        with:
+          go-version: '1.24.3'
+          node-version: '23.11.1'
+          wails-version: 'v2.9.0' # Set Wails version as per README recommendation
+          build-mode: 'release'
+          build-name: 'thefontapp'
+          platforms: 'windows/amd64,linux/amd64,darwin/universal'
+          install-pnpm: true
+          pre-build-script: 'pnpm install --frozen-lockfile'
 
       - name: Create Release
         id: create_release
@@ -85,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/bin/thefontapp-Windows-${{ steps.get_current_version.outputs.VERSION }}.exe
+          asset_path: ./dist/thefontapp-windows-amd64-v${{ steps.get_current_version.outputs.VERSION }}.exe
           asset_name: thefontapp-Windows-${{ steps.get_current_version.outputs.VERSION }}.exe
           asset_content_type: application/octet-stream
 
@@ -95,7 +76,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/bin/thefontapp-Linux-${{ steps.get_current_version.outputs.VERSION }}
+          asset_path: ./dist/thefontapp-linux-amd64-v${{ steps.get_current_version.outputs.VERSION }}
           asset_name: thefontapp-Linux-${{ steps.get_current_version.outputs.VERSION }}
           asset_content_type: application/octet-stream
 
@@ -105,7 +86,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/bin/thefontapp-macOS-${{ steps.get_current_version.outputs.VERSION }}.dmg
+          asset_path: ./dist/thefontapp-darwin-universal-v${{ steps.get_current_version.outputs.VERSION }}.dmg
           asset_name: thefontapp-macOS-${{ steps.get_current_version.outputs.VERSION }}.dmg
           asset_content_type: application/octet-stream
 
