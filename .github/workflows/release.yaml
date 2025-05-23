@@ -1,0 +1,114 @@
+name: thefontapp release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.3'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23.11.1'
+          cache: 'pnpm' # Cache pnpm modules for faster builds
+
+      - name: Install pnpm dependencies
+        run: pnpm install --frozen-lockfile # Use --frozen-lockfile for CI/CD
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Get current version
+        id: get_current_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Get previous version tag
+        id: get_previous_version
+        run: |
+          PREVIOUS_TAG=$(git tag --sort=-v:refname | sed -n '2p')
+          echo "PREVIOUS_TAG=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Read Changelog
+        id: read_changelog
+        run: |
+          CHANGELOG_CONTENT=$(cat CHANGELOG.md)
+          echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_OUTPUT
+          echo "${CHANGELOG_CONTENT}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Build for Windows
+        run: |
+          wails build -platform windows/amd64 -o "thefontapp-Windows-${{ steps.get_current_version.outputs.VERSION }}.exe"
+        env:
+          CGO_ENABLED: 1
+
+      - name: Build for Linux
+        run: |
+          wails build -platform linux/amd64 -o "thefontapp-Linux-${{ steps.get_current_version.outputs.VERSION }}"
+        env:
+          CGO_ENABLED: 1
+
+      - name: Build for macOS
+        run: |
+          wails build -platform darwin/universal -o "thefontapp-macOS-${{ steps.get_current_version.outputs.VERSION }}.dmg"
+        env:
+          CGO_ENABLED: 1
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: |
+            ## Release ${{ steps.get_current_version.outputs.VERSION }}
+
+            ${{ steps.read_changelog.outputs.CHANGELOG_CONTENT }}
+
+            Full Changelog: ${{ steps.get_previous_version.outputs.PREVIOUS_TAG }}...v${{ steps.get_current_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/bin/thefontapp-Windows-${{ steps.get_current_version.outputs.VERSION }}.exe
+          asset_name: thefontapp-Windows-${{ steps.get_current_version.outputs.VERSION }}.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Linux Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/bin/thefontapp-Linux-${{ steps.get_current_version.outputs.VERSION }}
+          asset_name: thefontapp-Linux-${{ steps.get_current_version.outputs.VERSION }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload macOS Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/bin/thefontapp-macOS-${{ steps.get_current_version.outputs.VERSION }}.dmg
+          asset_name: thefontapp-macOS-${{ steps.get_current_version.outputs.VERSION }}.dmg
+          asset_content_type: application/octet-stream
