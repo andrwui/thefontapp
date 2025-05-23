@@ -1,5 +1,3 @@
-import AppIcon from '../assets/tfa_logo.svg?react'
-import SearchBar from './components/header/searchbar/SearchBar'
 import Sidebar from './components/sidebar/Sidebar'
 import Fonts from './fonts/layout'
 import useLoadFontFaces from './hooks/useLoadFontFaces'
@@ -29,9 +27,7 @@ const Layout = () => {
   return (
     <div className="grid h-screen w-screen grid-cols-[var(--main-layout-cols)] grid-rows-[var(--main-layout-rows)]">
       <Sidebar />
-      <div className="col-start-1 col-end-1 flex w-80 items-center justify-start gap-5 px-5">
-        <AppIcon className="h-8 w-8" />
-      </div>
+      <div className="col-start-1 col-end-1 flex w-80 items-center justify-start gap-5 px-5"></div>
       <div className="col-start-2 row-span-2 row-start-1 h-full w-full">
         <AnimatePresence>
           <Routes>
