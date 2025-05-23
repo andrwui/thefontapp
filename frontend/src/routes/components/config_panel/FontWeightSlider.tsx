@@ -1,5 +1,5 @@
 import Slider from 'components/Slider'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import useFontSettingsStore from 'routes/stores/useFontSettingsStore'
 
 const FontWeightSlider = () => {
@@ -21,4 +21,4 @@ const FontWeightSlider = () => {
   )
 }
 
-export default FontWeightSlider
+export default memo(FontWeightSlider)

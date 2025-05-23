@@ -2,7 +2,7 @@ import { FontFocusContext } from '../FontWrapper'
 import Checkbox from 'components/Checkbox'
 import { font } from 'go/models'
 import { useContext, useEffect } from 'react'
-import { useSelectedLocalFontsStore } from 'routes/local/stores/SelectedLocalFontsStore'
+import { useSelectedLocalFontsStore } from 'routes/fonts/local/stores/SelectedLocalFontsStore'
 import { twMerge } from 'tailwind-merge'
 
 type SelectFontFamilyProps = { font: font.FontFamily }

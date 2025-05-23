@@ -1,10 +1,9 @@
 package archive
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
-	"thefontapp/internal/helper/paths"
+	"thefontapp/internal/helper"
 
 	"github.com/gen2brain/go-unarr"
 )
@@ -40,9 +39,9 @@ func CopyArchiveContents(archivePath string, filePaths []string, destPath string
 		}
 
 		filename := filepath.Base(filePath)
-		destFilePath := paths.ExpandHomeDir(filepath.Join(destPath, filename))
 
-		fmt.Println(destFilePath)
+		destFilePath := helper.ExpandHomeDir(filepath.Join(destPath, filename))
+
 		err = os.WriteFile(destFilePath, data, 0664)
 		if err != nil {
 			return err

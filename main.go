@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -14,7 +13,6 @@ import (
 	lfm "thefontapp/internal/font/local/model"
 )
 
-//go:embed all:frontend/dist
 var assets embed.FS
 
 type FileLoader struct {
@@ -36,22 +34,17 @@ func (h *FileLoader) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		requestedPath = strings.TrimPrefix(requestedPath, "/")
 	}
 
-	fmt.Printf("Requesting file: %s\n", requestedPath)
-
 	fileData, err := os.ReadFile(requestedPath)
 	if err != nil {
-		fmt.Printf("ERR | [AssetHandler] Unable to handle request '%s': %v\n", requestedPath, err)
 		res.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// Set the correct content type based on file extension
 	ext := filepath.Ext(requestedPath)
 	contentType := mime.TypeByExtension(ext)
 	if contentType != "" {
 		res.Header().Set("Content-Type", contentType)
 	} else {
-		// Fallback content types for fonts
 		switch strings.ToLower(ext) {
 		case ".ttf":
 			res.Header().Set("Content-Type", "font/ttf")

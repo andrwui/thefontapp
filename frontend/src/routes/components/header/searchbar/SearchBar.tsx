@@ -28,7 +28,7 @@ const SearchBar = () => {
       onReset={handleInputReset}
       value={searchValue}
       placeholder="Search fonts"
-      className="h-4/6 w-180"
+      className="h-15 w-full rounded-none border-none bg-transparent"
     />
   )
 }

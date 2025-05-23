@@ -1,5 +1,5 @@
 import Slider from 'components/Slider'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import useFontSettingsStore from 'routes/stores/useFontSettingsStore'
 
 const FontLetterSpacingSlider = () => {
@@ -24,4 +24,4 @@ const FontLetterSpacingSlider = () => {
   )
 }
 
-export default FontLetterSpacingSlider
+export default memo(FontLetterSpacingSlider)

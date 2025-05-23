@@ -16,3 +16,17 @@ export const getFileExtension = (path: string): string | undefined => {
 export const getFileNameFromCompletePath = (path: string): string | undefined => {
   return path.split('/').pop()
 }
+
+export const hasExtension = (path: string) => {
+  return getFileExtension(path)
+}
+
+export const hasFontExtension = (path: string) => {
+  const ext = getFileExtension(path)
+  return ext === 'otf' || ext === 'ttf'
+}
+
+export const hasArchiveExtension = (path: string) => {
+  const ext = getFileExtension(path)
+  return ext === 'zip' || ext === 'rar' || ext === 'tar' || ext === 'gz' || ext === '7z'
+}

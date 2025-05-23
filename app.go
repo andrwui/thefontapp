@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	appconfig "thefontapp/internal/app_config"
 	"thefontapp/internal/archive"
-	gfman "thefontapp/internal/font/google/manager"
-	lfman "thefontapp/internal/font/local/manager"
-	lfmod "thefontapp/internal/font/local/model"
-	lfsca "thefontapp/internal/font/local/scanner"
+	gman "thefontapp/internal/font/google/manager"
+	lman "thefontapp/internal/font/local/manager"
+	lfmodel "thefontapp/internal/font/local/model"
+	lfscanner "thefontapp/internal/font/local/scanner"
+	"thefontapp/internal/font/local/sources"
+	"thefontapp/internal/settings"
 )
 
 type App struct {
@@ -20,26 +21,69 @@ func NewApp() *App {
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	settings.InitSettings()
+	sources.InitSources()
 }
 
-func (a *App) GetLocalFonts() []lfmod.FontFamily {
-	return lfsca.GetLocalFonts()
+func (a *App) GetLocalFonts() ([]lfmodel.FontFamily, error) {
+	fonts := make([]lfmodel.FontFamily, 0)
+
+	sysFontSources, err := sources.GetSystemFontSource()
+	if err != nil {
+		return nil, err
+	}
+
+	usrFontSources, err := sources.GetUserFontSource()
+	if err != nil {
+		return nil, err
+	}
+
+	customFontSources, err := sources.GetCustomFontSources()
+	if err != nil {
+		return nil, err
+	}
+
+	sysFamilies, err := lfscanner.ScanFontFamilies(sysFontSources.Path)
+	if err != nil {
+		return nil, err
+	}
+
+	usrFamilies, err := lfscanner.ScanFontFamilies(usrFontSources.Path)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, source := range customFontSources {
+		sourceFonts, err := lfscanner.ScanFontFamilies(source.Path)
+		if err != nil {
+			return nil, err
+		}
+
+		fonts = append(fonts, sourceFonts...)
+
+	}
+
+	fonts = append(fonts, sysFamilies...)
+	fonts = append(fonts, usrFamilies...)
+
+	return fonts, nil
+
 }
 
 func (a *App) InstallLocalFont(fontPath, destPath string) error {
-	return lfman.InstallLocalFont(fontPath, destPath)
+	return lman.InstallLocalFont(fontPath, destPath)
 
 }
 func (a *App) DeleteFamily(paths []string) error {
-	return lfman.DeleteFamily(paths)
+	return lman.DeleteFamily(paths)
 }
 
 func (a *App) InstallGoogleFont(url string, path string) error {
-	return gfman.InstallGoogleFont(url, path)
+	return gman.InstallGoogleFont(url, path)
 }
 
-func (a *App) GetLocalFontDirectories() ([]string, error) {
-	return appconfig.GetLocalFontDirectories()
+func (a *App) GetLocalFontDirectories() ([]sources.Source, error) {
+	return sources.GetAllLocalFontSources()
 }
 
 func (a *App) ListArchiveContents(archivePath string) ([]string, error) {

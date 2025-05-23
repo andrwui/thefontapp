@@ -1,4 +1,12 @@
-import { createContext, Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
+import {
+  createContext,
+  Dispatch,
+  memo,
+  ReactElement,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
 
 export const FontFocusContext = createContext(
   {} as { isFocused: boolean; setIsFocused: Dispatch<SetStateAction<boolean>> },
@@ -15,4 +23,4 @@ const FontWrapper = ({ children }: { children: ReactElement | ReactElement[] }) 
   )
 }
 
-export default FontWrapper
+export default memo(FontWrapper)

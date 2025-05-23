@@ -19,8 +19,8 @@ const NavigationLink = ({
     <Link
       to={to}
       className={twMerge(
-        'group flex h-8 w-5/6 origin-left items-center justify-start gap-3 rounded-md px-5 py-5 font-light text-neutral-50 transition-colors duration-150',
-        isCurrentLocation && 'bg-neutral-900',
+        'flex w-full items-center justify-start gap-2 px-5 py-1 text-lg text-neutral-400 transition-all duration-150 hover:brightness-150',
+        isCurrentLocation && 'font-medium text-neutral-50 hover:brightness-100',
       )}
     >
       {Icon && Icon}

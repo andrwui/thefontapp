@@ -1,6 +1,6 @@
 import { X } from 'lucide-react'
 import { LucideIcon } from 'lucide-react'
-import React, { ChangeEvent, FocusEvent, forwardRef, useState } from 'react'
+import React, { ChangeEvent, FocusEvent, forwardRef, memo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type BigInputProps = {
@@ -91,5 +91,4 @@ const BigInput = forwardRef<HTMLInputElement, BigInputProps>(
 
 BigInput.displayName = 'BigInput'
 
-export default BigInput
-
+export default memo(BigInput)

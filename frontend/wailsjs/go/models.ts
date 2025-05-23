@@ -61,3 +61,28 @@ export namespace font {
 
 }
 
+export namespace sources {
+	
+	export class Source {
+	    name: string;
+	    path: string;
+	    icon: string;
+	    dir_readonly: boolean;
+	    source_readonly: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new Source(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.path = source["path"];
+	        this.icon = source["icon"];
+	        this.dir_readonly = source["dir_readonly"];
+	        this.source_readonly = source["source_readonly"];
+	    }
+	}
+
+}
+

@@ -14,13 +14,16 @@ export const useLocalFontStore = create<LocalFontStore>((set) => ({
 
   getLocalFonts: () => {
     set({ loadingLocalFonts: true })
-    GetLocalFonts().then((font) => {
-      const sortedFonts = font.sort((a, b) => {
-        if (a.name < b.name) return -1
-        if (a.name > b.name) return 1
-        return 0
+    GetLocalFonts()
+      .then((font) => {
+        console.log(font)
+        const sortedFonts = font.sort((a, b) => {
+          if (a.name < b.name) return -1
+          if (a.name > b.name) return 1
+          return 0
+        })
+        set({ localFonts: sortedFonts, loadingLocalFonts: false })
       })
-      set({ localFonts: sortedFonts, loadingLocalFonts: false })
-    })
+      .catch((error) => console.log(error))
   },
 }))

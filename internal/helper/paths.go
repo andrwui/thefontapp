@@ -1,4 +1,4 @@
-package paths
+package helper
 
 import (
 	"os"
@@ -17,17 +17,9 @@ func ExpandHomeDir(path string) string {
 	return path
 }
 
-func GetFileExtension(filepath string) string {
-	lastDotIndex := strings.LastIndex(filepath, ".")
-
-	if lastDotIndex < 0 || lastDotIndex == len(filepath)-1 {
-		return ""
-	}
-	return filepath[lastDotIndex:]
-}
-
 func GetTempPath() (string, error) {
 	tempDir := os.TempDir()
+	os.UserHomeDir()
 
 	appTempDir := filepath.Join(tempDir, "thefontapp")
 
@@ -37,6 +29,18 @@ func GetTempPath() (string, error) {
 	}
 
 	return appTempDir, nil
+}
+
+func GetAppDataDir() (string, error) {
+	appname := "thefontapp"
+
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(configDir, appname), nil
+
 }
 
 func CleanTmpDir() error {
@@ -60,22 +64,19 @@ func CleanTmpDir() error {
 
 }
 
-func GetDirectoryFiles(rootDir string) ([]string, error) {
+func IsDirectoryReadOnly(dir string) bool {
+	testFile := filepath.Join(dir, ".test_permission")
 
-	var files []string
+	err := os.WriteFile(testFile, []byte("test"), 0600)
+	if err != nil {
 
-	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
+		if os.IsPermission(err) {
+			return true
 		}
 
-		if !info.IsDir() {
-			cleanPath := filepath.ToSlash(path)
-			files = append(files, cleanPath)
-		}
+		return false
+	}
 
-		return nil
-	})
-
-	return files, err
+	os.Remove(testFile)
+	return false
 }

@@ -1,17 +1,17 @@
 /// <reference types="vite-plugin-svgr/client" />
 import NavigationLink from './NavigationLink'
 import { Eye, FileStack, Globe, Settings, TestTube } from 'lucide-react'
-import { useGoogleFontsStore } from 'routes/google/stores/GoogleFontsStore'
-import { useLocalFontStore } from 'routes/local/stores/LocalFontStore'
+import { useGoogleFontsStore } from 'routes/fonts/google/stores/GoogleFontsStore'
+import { useLocalFontStore } from 'routes/fonts/local/stores/LocalFontStore'
 
 const Navigation = () => {
   const { localFonts } = useLocalFontStore()
   const { googleFonts } = useGoogleFontsStore()
 
   return (
-    <div className="col-start-1 row-start-2 flex h-max w-full flex-col items-center gap-1">
+    <div className="col-start-1 row-start-2 flex h-max w-full flex-col items-center justify-center gap-1">
       <NavigationLink
-        to="/local"
+        to="/fonts/local"
         Icon={<FileStack size={16} />}
       >
         <div className="flex w-full justify-between">
@@ -20,7 +20,7 @@ const Navigation = () => {
         </div>
       </NavigationLink>
       <NavigationLink
-        to="/google"
+        to="/fonts/google"
         Icon={<Globe size={16} />}
       >
         <div className="flex w-full justify-between">

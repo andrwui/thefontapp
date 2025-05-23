@@ -6,7 +6,7 @@ import CyclerButton from 'components/CyclerButton'
 import IconSwitch from 'components/IconSwitch'
 import useKeybind from 'hooks/useKeybind'
 import { AlignLeft, AlignRight, AlignCenter, Italic, Pencil } from 'lucide-react'
-import { ChangeEvent, useCallback, useRef } from 'react'
+import { ChangeEvent, memo, useCallback, useRef } from 'react'
 import useFontSettingsStore from 'routes/stores/useFontSettingsStore'
 
 const ConfigPanel = () => {
@@ -50,7 +50,7 @@ const ConfigPanel = () => {
   }
 
   return (
-    <div className="flex h-28 w-full flex-col justify-between bg-neutral-50 bg-neutral-950 pt-1">
+    <div className="z-50 flex h-28 w-full flex-col justify-between bg-neutral-950 pt-1">
       <div className="flex h-1/2 items-center gap-10 px-5">
         <IconSwitch
           icon={Italic}
@@ -65,6 +65,9 @@ const ConfigPanel = () => {
         <FontSizeSlider />
         <FontWeightSlider />
         <FontLetterSpacingSlider />
+        <div className="flex items-center gap-2">
+          <button className="text-nowrap">Reset all</button>
+        </div>
       </div>
       <BigInput
         ref={inputRef}
@@ -78,4 +81,4 @@ const ConfigPanel = () => {
   )
 }
 
-export default ConfigPanel
+export default memo(ConfigPanel)

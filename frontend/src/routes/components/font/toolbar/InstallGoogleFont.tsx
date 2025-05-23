@@ -1,13 +1,13 @@
 import ToolbarIconButton from './ToolbarIconButton'
 import { InstallGoogleFont as installGoogleFont } from 'go/main/App'
-import { Download } from 'lucide-react'
-import { GoogleFont } from 'routes/google/types/GoogleFont'
-import { useLocalFontStore } from 'routes/local/stores/LocalFontStore'
+import { Check, Download } from 'lucide-react'
+import { GoogleFont } from 'routes/fonts/google/types/GoogleFont'
+import { useLocalFontStore } from 'routes/fonts/local/stores/LocalFontStore'
 import { toSnakeCase } from 'utils/strings'
 import toast from 'utils/toast'
 
 const InstallGoogleFont = ({ font }: { font: GoogleFont }) => {
-  const { getLocalFonts } = useLocalFontStore()
+  const { localFonts, getLocalFonts } = useLocalFontStore()
 
   const handleClick = async () => {
     const toastID = toast.loading(`Installing "${font.family}"...`)
@@ -38,10 +38,27 @@ const InstallGoogleFont = ({ font }: { font: GoogleFont }) => {
     }
     getLocalFonts()
   }
-  return (
+
+  const isFontInstalled = () => {
+    let found = false
+    localFonts.forEach((localFont) => {
+      if (font.family === localFont.name) {
+        found = true
+      }
+    })
+    return found
+  }
+
+  return !isFontInstalled() ? (
     <ToolbarIconButton
       Icon={Download}
       onClick={handleClick}
+    />
+  ) : (
+    <ToolbarIconButton
+      Icon={Check}
+      onClick={() => {}}
+      className="cursor-not-allowed"
     />
   )
 }

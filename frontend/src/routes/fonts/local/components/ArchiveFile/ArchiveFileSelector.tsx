@@ -4,8 +4,10 @@ import Checkbox from 'components/Checkbox'
 import Dialog from 'components/Dialog'
 import Dropdown from 'components/Dropdown'
 import { GetLocalFontDirectories, CopyArchiveContents } from 'go/main/App'
-import { useState, useEffect } from 'react'
-import { FileNode, FolderNode } from 'utils/fs'
+import { sources } from 'go/models'
+import { DynamicIcon } from 'lucide-react/dynamic'
+import { useState, useEffect, ComponentProps } from 'react'
+import { FileNode, FolderNode, getAllFilesFromFolder } from 'utils/fs'
 import toast from 'utils/toast'
 
 interface FontFileSelectorProps {
@@ -24,19 +26,13 @@ const FontFileSelector = ({
   onSuccess,
 }: FontFileSelectorProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FileNode[]>([])
-  const [fontDirectories, setFontDirectories] = useState<string[]>([])
+  const [fontDirectories, setFontDirectories] = useState<sources.Source[]>([])
   const [destination, setDestination] = useState<string>('')
   const [isSelectAllChecked, setIsSelectAllChecked] = useState(false)
 
   useEffect(() => {
-    console.log(selectedFiles)
-  }, [selectedFiles])
-
-  useEffect(() => {
-    GetLocalFontDirectories()
-      .then((fds) => fds.filter((fd) => fd.startsWith('~/')))
-      .then((fdirs) => setFontDirectories(fdirs))
-  }, [])
+    GetLocalFontDirectories().then((fds) => setFontDirectories(fds))
+  }, [fileStructure])
 
   useEffect(() => {
     if (fileStructure) {
@@ -65,25 +61,17 @@ const FontFileSelector = ({
     }
   }
 
-  const getAllFilesFromFolderRecursive = (folder: FolderNode): FileNode[] => {
-    let files: FileNode[] = [...folder.files]
-    folder.folders.forEach((subFolder) => {
-      files = [...files, ...getAllFilesFromFolderRecursive(subFolder)]
-    })
-    return files
-  }
-
   const handleFolderSelect = (folder: FolderNode) => {
-    const allFilesInFolder = getAllFilesFromFolderRecursive(folder)
-    const allFilesInFolderFullpaths = allFilesInFolder.map((f) => f.fullpath)
+    const allFilesInFolder = getAllFilesFromFolder(folder)
+    const allFilesInFolderPaths = allFilesInFolder.map((f) => f.fullpath)
     const currentlySelectedInFolder = selectedFiles.filter((file) =>
-      allFilesInFolderFullpaths.includes(file.fullpath),
+      allFilesInFolderPaths.includes(file.fullpath),
     )
     const allAreSelected = currentlySelectedInFolder.length === allFilesInFolder.length
 
     if (allAreSelected) {
       setSelectedFiles(
-        selectedFiles.filter((file) => !allFilesInFolderFullpaths.includes(file.fullpath)),
+        selectedFiles.filter((file) => !allFilesInFolderPaths.includes(file.fullpath)),
       )
     } else {
       const newSelectedFiles = [...selectedFiles]
@@ -99,21 +87,13 @@ const FontFileSelector = ({
   const handleSelectAllChange = (checked: boolean) => {
     setIsSelectAllChecked(checked)
     if (fileStructure) {
-      const allFiles = getAllFilesFromFolderRecursive(fileStructure)
+      const allFiles = getAllFilesFromFolder(fileStructure)
       if (checked) {
         setSelectedFiles(allFiles)
       } else {
         setSelectedFiles([])
       }
     }
-  }
-
-  const getAllFilesFromFolder = (folder: FolderNode): FileNode[] => {
-    let files: FileNode[] = [...folder.files]
-    folder.folders.forEach((subFolder) => {
-      files = [...files, ...getAllFilesFromFolder(subFolder)]
-    })
-    return files
   }
 
   const handleClose = () => {
@@ -137,7 +117,19 @@ const FontFileSelector = ({
         toast.success('Fonts from archive installed succesfully.', toastID)
       })
       .catch((error) => {
-        toast.error(`Fonts from archive could not be installed. ${error}`, toastID)
+        toast.error(
+          <>
+            Fonts from archive could not be installed. Click
+            <button
+              className="underline"
+              onClick={() => navigator.clipboard.writeText(error)}
+            >
+              here
+            </button>
+            to copy the the error to your clipboard.
+          </>,
+          toastID,
+        )
       })
 
     onSuccess()
@@ -150,8 +142,8 @@ const FontFileSelector = ({
       onClose={handleClose}
       className={'w-200 max-w-200'}
     >
-      <div className="flex w-full flex-col gap-10">
-        <h1 className="text-3xl font-bold">Select the files you wish to install</h1>
+      <div className="flex w-full flex-col gap-5">
+        <h1 className="text-3xl font-medium">Select the font files you wish to install</h1>
         <ArchiveFolderStructure
           onFolderSelect={handleFolderSelect}
           fileStructure={fileStructure}
@@ -170,7 +162,12 @@ const FontFileSelector = ({
           <Dropdown
             value={destination}
             onChange={handleDestinationChange}
-            options={fontDirectories.map((d) => ({ display: d, value: d }))}
+            options={fontDirectories.map((d) => ({
+              display: d.name,
+              value: d.path,
+              icon: d.icon as ComponentProps<typeof DynamicIcon>['name'],
+              disabled: d.dir_readonly,
+            }))}
             placeholder="destination"
           />
         </div>

@@ -60,3 +60,10 @@ export const createArchiveFileStructure = (paths: string[]): FolderNode => {
 
   return root
 }
+export const getAllFilesFromFolder = (folder: FolderNode): FileNode[] => {
+  let files: FileNode[] = [...folder.files]
+  folder.folders.forEach((subFolder) => {
+    files = [...files, ...getAllFilesFromFolder(subFolder)]
+  })
+  return files
+}

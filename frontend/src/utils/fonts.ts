@@ -5,10 +5,7 @@ export const curateArchivePaths = (paths: string[]): string[] => {
     return (
       !lcPath.includes('.ds_store') &&
       !lcPath.includes('__macosx') &&
-      (lcPath.includes('ofL') ||
-        lcPath.includes('license') ||
-        lcPath.includes('.otf') ||
-        lcPath.includes('.ttf'))
+      (lcPath.includes('.otf') || lcPath.includes('.ttf'))
     )
   })
 }

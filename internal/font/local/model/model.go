@@ -19,4 +19,3 @@ type FontFamily struct {
 func (ff *FontFamily) GetName() string {
 	return ff.Name
 }
-

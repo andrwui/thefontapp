@@ -1,5 +1,6 @@
 import './main.css'
 import Toasts from 'components/Toasts'
+import { TooltipContextProvider } from 'components/Tooltip'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import Layout from 'routes/layout'
@@ -13,7 +14,9 @@ const root = createRoot(container!)
 
 root.render(
   <BrowserRouter>
-    <Toasts />
-    <Layout />
+    <TooltipContextProvider>
+      <Toasts />
+      <Layout />
+    </TooltipContextProvider>
   </BrowserRouter>,
 )

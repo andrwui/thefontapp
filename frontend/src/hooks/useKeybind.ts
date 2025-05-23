@@ -20,7 +20,6 @@ const useKeybind = (keySeq: string[], cb: () => void) => {
     pressedKeys.current.delete(e.key)
   }, [])
 
-  // Add this function to clear all keys when focus changes
   const handleBlur = useCallback(() => {
     pressedKeys.current.clear()
   }, [])
@@ -41,4 +40,3 @@ const useKeybind = (keySeq: string[], cb: () => void) => {
 }
 
 export default useKeybind
-

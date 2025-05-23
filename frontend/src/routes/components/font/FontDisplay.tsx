@@ -1,7 +1,8 @@
 import { FontFocusContext } from './FontWrapper'
 import Spinner from 'components/Spinner'
-import { ChangeEvent, CSSProperties, useContext, useEffect, useState } from 'react'
-import { GoogleFont } from 'routes/google/types/GoogleFont'
+import { ChangeEvent, CSSProperties, memo, useContext, useEffect, useState } from 'react'
+import { useGoogleFontsStore } from 'routes/fonts/google/stores/GoogleFontsStore'
+import { GoogleFont } from 'routes/fonts/google/types/GoogleFont'
 import useFontSettingsStore from 'routes/stores/useFontSettingsStore'
 import { twMerge } from 'tailwind-merge'
 import wf from 'webfontloader'
@@ -10,27 +11,31 @@ const FontDisplay = ({
   fontName,
   isGoogle,
   variants,
+  availableItalics,
 }: {
   fontName: string
   isGoogle?: boolean
   variants?: GoogleFont['variants']
+  availableItalics?: number[]
 }) => {
   const { previewText, fontSize, fontWeight, letterSpacing, fontItalic, textAlign } =
     useFontSettingsStore()
+  const { addLoadedGoogleFont, isGoogleFontLoaded } = useGoogleFontsStore()
   const [displayText, setDisplayText] = useState<string>('')
-  const [fontLoaded, setFontLoaded] = useState<boolean>(false)
 
   const { setIsFocused } = useContext(FontFocusContext)
 
   useEffect(() => {
-    if (isGoogle && variants) {
+    console.log({ availableItalics })
+    console.log({ fontWeight })
+    if (isGoogle && variants && !isGoogleFontLoaded(fontName)) {
       wf.load({
         google: {
           families: variants.map((v) => `${fontName}:${v}`),
         },
         fontactive: (familyName) => {
           if (familyName === fontName) {
-            setFontLoaded(true)
+            addLoadedGoogleFont(fontName)
           }
         },
       })
@@ -69,13 +74,13 @@ const FontDisplay = ({
     letterSpacing: `${letterSpacing}em`,
     lineHeight: `${fontSize * 1.5}px`,
     fontWeight: `${fontWeight}`,
-    fontStyle: `${fontItalic ? 'italic' : ''}`,
+    fontStyle: `${fontItalic && availableItalics?.includes(fontWeight)} 'italic' : ''}`,
     textAlign: `${textAlign}`,
     maxHeight: `${fontSize * 1.5}px`,
     minHeight: `${fontSize * 1.5}px`,
   } as CSSProperties
 
-  if (isGoogle && !fontLoaded)
+  if (isGoogle && !isGoogleFontLoaded(fontName))
     return (
       <div style={styles}>
         <Spinner size={fontSize} />
@@ -101,4 +106,4 @@ const FontDisplay = ({
   )
 }
 
-export default FontDisplay
+export default memo(FontDisplay)

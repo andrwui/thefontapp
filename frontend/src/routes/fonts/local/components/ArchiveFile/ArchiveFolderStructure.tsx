@@ -17,7 +17,7 @@ interface ArchiveFolderStructureProps {
 }
 interface FolderProps {
   fileStructure: FolderNode
-  depth: number
+  folderDepth: number
   onFileSelect: (file: FileNode) => void
   onFolderSelect: (folder: FolderNode) => void
   selectedFiles: FileNode[]
@@ -30,9 +30,9 @@ const ArchiveFolderStructure = ({
   selectedFiles,
 }: ArchiveFolderStructureProps) => {
   return (
-    <div className="relative block h-90 max-h-90 overflow-y-scroll rounded-xl border-1 border-neutral-800 bg-neutral-900">
+    <div className="relative block h-90 max-h-90 overflow-y-scroll rounded-xl">
       <Folder
-        depth={0}
+        folderDepth={0}
         onFileSelect={onFileSelect}
         onFolderSelect={onFolderSelect}
         fileStructure={fileStructure}
@@ -44,7 +44,7 @@ const ArchiveFolderStructure = ({
 
 const Folder = ({
   fileStructure,
-  depth,
+  folderDepth,
   onFileSelect,
   onFolderSelect,
   selectedFiles,
@@ -71,22 +71,24 @@ const Folder = ({
     return allFiles.every((file) => selectedFilesFullpaths.includes(file.fullpath))
   }
 
+  console.log(folderDepth)
+
   return (
     <Accordion
       type="multiple"
-      style={{ paddingLeft: `${depth * 13}px` }}
+      style={{ paddingLeft: `${folderDepth * 23}px` }}
       defaultValue={['/']}
-      disabled={depth === 0}
-      className="mt-2"
+      disabled={folderDepth === 0}
+      className={`mt-2`}
     >
       <AccordionItem value={fileStructure.fullpath}>
         <AccordionHeader className="flex gap-2">
-          {depth > 0 && (
+          {folderDepth > 0 && (
             <div className="sticky top-0 flex items-center gap-2">
               <AccordionTrigger className="group cursor-pointer">
                 <ChevronDown
                   size={16}
-                  className="group-data-[state=open]:-rotate-90"
+                  className="transition-all duration-150 group-data-[state=open]:-rotate-90"
                 />
               </AccordionTrigger>
               <Checkbox
@@ -101,10 +103,22 @@ const Folder = ({
           )}
         </AccordionHeader>
         <AccordionContent className="data-[state=closed]:animate-accordion-close data-[state=open]:animate-accordion-open overflow-hidden">
+          {fileStructure.folders.map((subFolder) => {
+            return (
+              <Folder
+                fileStructure={subFolder}
+                folderDepth={folderDepth + 1}
+                onFolderSelect={onFolderSelect}
+                onFileSelect={onFileSelect}
+                selectedFiles={selectedFiles}
+                key={subFolder.fullpath}
+              />
+            )
+          })}
           {fileStructure.files.map((file) => {
             return (
               <label
-                style={{ paddingLeft: `${depth * 23}px` }}
+                style={{ paddingLeft: `${(folderDepth + 1) * 23}px` }}
                 key={file.fullpath}
                 className="mt-2 flex cursor-pointer gap-2"
               >
@@ -115,18 +129,6 @@ const Folder = ({
                 <FileIcon size={16} />
                 <p>{file.name}</p>
               </label>
-            )
-          })}
-          {fileStructure.folders.map((subFolder) => {
-            return (
-              <Folder
-                fileStructure={subFolder}
-                depth={depth + 1}
-                onFolderSelect={onFolderSelect}
-                onFileSelect={onFileSelect}
-                selectedFiles={selectedFiles}
-                key={subFolder.fullpath}
-              />
             )
           })}
         </AccordionContent>

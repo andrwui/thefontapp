@@ -29,7 +29,7 @@ export type GoogleFont = {
     '800italic'?: string
     '900italic'?: string
   }
-  category: string
+  category: 'serif' | 'sans-serif' | 'monospace' | 'display' | 'handwriting'
   kind: string
   menu: string
   colorCapabilities?: Array<string>

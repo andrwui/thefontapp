@@ -23,7 +23,7 @@ const CyclerButton = ({ options, value, onChange }: CyclerButtonProps) => {
 
   return (
     <button
-      className="grid aspect-square w-20 cursor-pointer place-items-center rounded-md bg-neutral-900 p-2 active:scale-95"
+      className="grid aspect-square w-20 cursor-pointer place-items-center rounded-sm bg-neutral-900 p-2 active:scale-95"
       onClick={handleClick}
     >
       {options[displayIndex].icon}
@@ -32,4 +32,3 @@ const CyclerButton = ({ options, value, onChange }: CyclerButtonProps) => {
 }
 
 export default CyclerButton
-

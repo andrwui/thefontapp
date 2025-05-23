@@ -8,6 +8,7 @@ import {
   FocusEvent,
   ChangeEvent,
   KeyboardEvent,
+  memo,
 } from 'react'
 
 type CustomSliderProps = RadixSlider.SliderProps & {
@@ -56,7 +57,7 @@ type InputValueProps = {
   max: number
 }
 
-const InputValue = ({ unit, value, onChange, min, max }: InputValueProps): ReactElement => {
+const InputValue = memo(({ unit, value, onChange, min, max }: InputValueProps): ReactElement => {
   const [inputValue, setInputValue] = useState(value[0].toString())
   const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -122,9 +123,9 @@ const InputValue = ({ unit, value, onChange, min, max }: InputValueProps): React
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      className="text-regular w-16 rounded-sm bg-neutral-900 p-1 text-center text-xs max-xl:hidden"
+      className="text-regular w-16 rounded-xs bg-neutral-900 p-1 text-center text-xs max-xl:hidden"
     />
   )
-}
+})
 
-export default Slider
+export default memo(Slider)
