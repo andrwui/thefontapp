@@ -24,13 +24,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '23.11.1'
-          cache: 'pnpm'
+          cache: 'npm' 
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install pnpm dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install npm dependencies
+        run: npm install --ci 
 
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
