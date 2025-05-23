@@ -28,24 +28,28 @@ const Navigation = () => {
           <p className="font-thin">{googleFonts.length}</p>
         </div>
       </NavigationLink>
-      {/* <NavigationLink
-        to="/preview"
-        Icon={<Eye size={16} />}
-      >
-        Preview
-      </NavigationLink>
-      <NavigationLink
-        to="/settings"
-        Icon={<Settings size={16} />}
-      >
-        Settings
-      </NavigationLink>*/}
-      <NavigationLink
-        to="/tests"
-        Icon={<TestTube size={16} />}
-      >
-        Tests
-      </NavigationLink>
+      {import.meta.env.DEV && (
+        <>
+          <NavigationLink
+            to="/preview"
+            Icon={<Eye size={16} />}
+          >
+            Preview
+          </NavigationLink>
+          <NavigationLink
+            to="/settings"
+            Icon={<Settings size={16} />}
+          >
+            Settings
+          </NavigationLink>
+          <NavigationLink
+            to="/tests"
+            Icon={<TestTube size={16} />}
+          >
+            Tests
+          </NavigationLink>
+        </>
+      )}
     </div>
   )
 }
