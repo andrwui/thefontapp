@@ -14,9 +14,9 @@ jobs:
           submodules: recursive
 
       - name: Build wails
-      - uses: dAppServer/wails-build-action@v3
+      - uses: dAppServer/wails-build-action@v2.2
         with:
-          build-name: wailsApp
+          build-name: thefontapp
           build-platform: linux/amd64
 
       - name: Get tag name
