@@ -14,8 +14,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build wails
-        uses: dAppServer/wails-build-action@v3
+      - uses: dAppServer/wails-build-action@v3
         with:
           build-name: wailsApp
           build-platform: linux/amd64
