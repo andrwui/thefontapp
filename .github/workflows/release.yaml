@@ -1,92 +1,64 @@
-name: Release Wails App
+name: Wails build
 
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '*'
+
+env:
+  NODE_OPTIONS: "--max-old-space-size=4096"
 
 jobs:
-  build_and_release:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+          - name: 'App'
+            platform: 'linux/amd64'
+            os: 'ubuntu-latest'
+            ext: ''
+          - name: 'App'
+            platform: 'windows/amd64'
+            os: 'windows-latest'
+            ext: '.exe'
+          - name: 'App'
+            platform: 'darwin/universal'
+            os: 'macos-latest'
+            ext: ''
 
+    runs-on: ${{ matrix.build.os }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          submodules: recursive
 
-      - name: Get current version
-        id: get_current_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Get previous version tag
-        id: get_previous_version
-        run: |
-          PREVIOUS_TAG=$(git tag --sort=-v:refname | sed -n '2p')
-          echo "PREVIOUS_TAG=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
-
-      - name: Read Changelog
-        id: read_changelog
-        run: |
-          CHANGELOG_CONTENT=$(cat CHANGELOG.md)
-          echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_OUTPUT
-          echo "${CHANGELOG_CONTENT}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Build Wails App (Cross-Platform)
-        uses: dAppServer/wails-build-action@main # Updated to @main as per README
+      - name: Build wails
+        uses: dAppServer/wails-build-action@v2.2
+        id: build
         with:
-          go-version: '1.24.3'
-          node-version: '23.11.1'
-          wails-version: 'v2.9.0' 
-          build-mode: 'release'
-          build-name: 'thefontapp'
-          platforms: 'windows/amd64,linux/amd64,darwin/universal'
-          install-pnpm: true
-          pre-build-script: 'pnpm install --frozen-lockfile'
+          build-name: ${{ matrix.build.name }}
+          build-platform: ${{ matrix.build.platform }}
+          package: false
+          go-version: '1.20'
 
-      - name: Create Release
-        id: create_release
+      - name: Get tag name
+        id: vars
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          body: |
-            ## Release ${{ steps.get_current_version.outputs.VERSION }}
-
-            ${{ steps.read_changelog.outputs.CHANGELOG_CONTENT }}
-
-            Full Changelog: ${{ steps.get_previous_version.outputs.PREVIOUS_TAG }}...v${{ steps.get_current_version.outputs.VERSION }}
+          tag_name: ${{ env.TAG_NAME }}
+          name: Release ${{ env.TAG_NAME }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Windows Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload binaries to release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/thefontapp-windows-amd64-v${{ steps.get_current_version.outputs.VERSION }}.exe
-          asset_name: thefontapp-Windows-${{ steps.get_current_version.outputs.VERSION }}.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload Linux Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/thefontapp-linux-amd64-v${{ steps.get_current_version.outputs.VERSION }}
-          asset_name: thefontapp-Linux-${{ steps.get_current_version.outputs.VERSION }}
-          asset_content_type: application/octet-stream
-
-      - name: Upload macOS Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/thefontapp-darwin-universal-v${{ steps.get_current_version.outputs.VERSION }}.dmg
-          asset_name: thefontapp-macOS-${{ steps.get_current_version.outputs.VERSION }}.dmg
-          asset_content_type: application/octet-stream
+          tag_name: ${{ env.TAG_NAME }}
+          files: |
+            build/${{ matrix.build.name }}${{ matrix.build.ext }}
 
