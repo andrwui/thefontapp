@@ -5,29 +5,8 @@ on:
     tags:
       - '*'
 
-env:
-  NODE_OPTIONS: "--max-old-space-size=4096"
-
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        build:
-          - name: 'App'
-            platform: 'linux/amd64'
-            os: 'ubuntu-latest'
-            ext: ''
-          - name: 'App'
-            platform: 'windows/amd64'
-            os: 'windows-latest'
-            ext: '.exe'
-          - name: 'App'
-            platform: 'darwin/universal'
-            os: 'macos-latest'
-            ext: ''
-
-    runs-on: ${{ matrix.build.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,13 +14,10 @@ jobs:
           submodules: recursive
 
       - name: Build wails
-        uses: dAppServer/wails-build-action@v3
-        id: build
+      - uses: dAppServer/wails-build-action@v3
         with:
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          package: false
-          go-version: '1.20'
+          build-name: wailsApp
+          build-platform: linux/amd64
 
       - name: Get tag name
         id: vars
