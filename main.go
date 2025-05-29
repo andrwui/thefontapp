@@ -13,6 +13,7 @@ import (
 	lfm "thefontapp/internal/font/local/model"
 )
 
+//go:embed all:frontend/dist
 var assets embed.FS
 
 type FileLoader struct {
@@ -26,7 +27,6 @@ func NewFileLoader() *FileLoader {
 func (h *FileLoader) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	var err error
 
-	// Normalize the requested path - strip any URL scheme and leading slashes
 	requestedPath := req.URL.Path
 	if strings.HasPrefix(requestedPath, "/wails/") {
 		requestedPath = strings.TrimPrefix(requestedPath, "/wails/")
