@@ -74,7 +74,7 @@ const FontDisplay = ({
     letterSpacing: `${letterSpacing}em`,
     lineHeight: `${fontSize * 1.5}px`,
     fontWeight: `${fontWeight}`,
-    fontStyle: `${fontItalic && availableItalics?.includes(fontWeight)} 'italic' : ''}`,
+    fontStyle: `${fontItalic ? 'italic' : ''}`,
     textAlign: `${textAlign}`,
     maxHeight: `${fontSize * 1.5}px`,
     minHeight: `${fontSize * 1.5}px`,
