@@ -50,7 +50,7 @@ you can build them yourself following the steps in the [build](#build) section.
 
 ---
 
-### building
+### build
 
 i think the only requirement is to have [wails](https://github.com/wailsapp/wails) installed on your system.
 
