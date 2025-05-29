@@ -1,11 +1,10 @@
 package archive
 
 import (
+	"github.com/gen2brain/go-unarr"
 	"os"
 	"path/filepath"
 	"thefontapp/internal/helper"
-
-	"github.com/gen2brain/go-unarr"
 )
 
 func ListArchiveContents(path string) ([]string, error) {
