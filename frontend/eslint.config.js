@@ -15,7 +15,7 @@ export default [
       '@typescript-eslint/no-unused-vars': 0,
       '@typescript-eslint/no-explicit-any': 0,
       'prettier/prettier': [
-        'error',
+        2,
         {
           tabWidth: 2,
           endOfLine: 'lf',

@@ -27,7 +27,7 @@ const SelectFontFamily = ({ font }: SelectFontFamilyProps) => {
       checked={selectedFonts.has(font.name)}
       onCheckedChange={handleCheckedChange}
       className={twMerge(
-        'absolute left-0 opacity-0 group-hover:opacity-100 checked:bg-neutral-50',
+        'absolute left-0 opacity-0 duration-200 group-hover:opacity-100 checked:bg-neutral-50',
         isFocused && 'opacity-100',
       )}
     />

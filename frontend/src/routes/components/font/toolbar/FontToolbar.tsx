@@ -18,9 +18,9 @@ const FontToolbar = ({ children }: { children: any }) => {
   return (
     <div
       className={twMerge(
-        'relative flex h-min w-full items-center gap-2 transition-all duration-100 group-hover:pl-6',
+        'relative flex h-min w-full items-center gap-2 transition-all duration-200 group-hover:pl-7',
         itemAlign,
-        isFocused && 'pl-6',
+        isFocused && 'pl-7',
       )}
     >
       {children}

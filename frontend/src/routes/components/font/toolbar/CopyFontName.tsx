@@ -1,13 +1,12 @@
 import ToolbarIconButton from './ToolbarIconButton'
 import Spinner from 'components/Spinner'
-import { useTooltip } from 'components/Tooltip'
+import Tooltip from 'components/Tooltip'
 import { Clipboard } from 'lucide-react'
 import { memo, useRef, useState } from 'react'
 import toast from 'utils/toast'
 
 const CopyFontName = ({ fontName }: { fontName: string }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { hideTooltip, showTooltip } = useTooltip()
 
   const buttonRef = useRef<HTMLButtonElement | null>(null)
 
@@ -22,19 +21,14 @@ const CopyFontName = ({ fontName }: { fontName: string }) => {
   if (isLoading) return <Spinner size={16} />
 
   return (
-    <ToolbarIconButton
-      onMouseEnter={() => {
-        showTooltip({
-          title: 'Copy family name',
-          info: 'Copy family name',
-        })
-      }}
-      onMouseLeave={() => hideTooltip()}
-      ref={buttonRef}
-      Icon={Clipboard}
-      className="size-4 hover:cursor-pointer"
-      onClick={onClick}
-    />
+    <Tooltip content="Copy font name">
+      <ToolbarIconButton
+        ref={buttonRef}
+        Icon={Clipboard}
+        className="size-4 hover:cursor-pointer"
+        onClick={onClick}
+      />
+    </Tooltip>
   )
 }
 

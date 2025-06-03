@@ -2,7 +2,6 @@ import ToolbarIconButton from './ToolbarIconButton'
 import Button from 'components/Button'
 import Dialog from 'components/Dialog'
 import Spinner from 'components/Spinner'
-import { useTooltip } from 'components/Tooltip'
 import { DeleteFamily } from 'go/main/App'
 import { Check, Trash } from 'lucide-react'
 import { memo, useState } from 'react'
@@ -20,7 +19,6 @@ const DeleteFont = ({ fontPaths, hasReadonly }: DeleteFontProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const { getLocalFonts } = useLocalFontStore()
-  const { showTooltip, hideTooltip } = useTooltip()
 
   const handleDialogConfirm = () => {
     setIsDeleting(true)
@@ -40,13 +38,6 @@ const DeleteFont = ({ fontPaths, hasReadonly }: DeleteFontProps) => {
   return (
     <>
       <ToolbarIconButton
-        onMouseEnter={() => {
-          showTooltip({
-            title: 'Delete font',
-            info: 'Delete font family',
-          })
-        }}
-        onMouseLeave={() => hideTooltip()}
         Icon={Trash}
         onClick={() => !hasReadonly && setIsDialogOpen(true)}
         className={twMerge('cursor-pointer', hasReadonly && 'cursor-not-allowed brightness-10')}

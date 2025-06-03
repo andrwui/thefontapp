@@ -5,6 +5,7 @@ import { useGoogleFontsStore } from 'routes/fonts/google/stores/GoogleFontsStore
 import { GoogleFont } from 'routes/fonts/google/types/GoogleFont'
 import useFontSettingsStore from 'routes/stores/useFontSettingsStore'
 import { twMerge } from 'tailwind-merge'
+import { findClosest } from 'utils/numbers'
 import wf from 'webfontloader'
 
 const FontDisplay = ({
@@ -12,11 +13,13 @@ const FontDisplay = ({
   isGoogle,
   variants,
   availableItalics,
+  availableWeights,
 }: {
   fontName: string
   isGoogle?: boolean
   variants?: GoogleFont['variants']
   availableItalics?: number[]
+  availableWeights?: number[]
 }) => {
   const { previewText, fontSize, fontWeight, letterSpacing, fontItalic, textAlign } =
     useFontSettingsStore()
@@ -73,8 +76,8 @@ const FontDisplay = ({
     fontSize: `${fontSize}px`,
     letterSpacing: `${letterSpacing}em`,
     lineHeight: `${fontSize * 1.5}px`,
-    fontWeight: `${fontWeight}`,
-    fontStyle: `${fontItalic ? 'italic' : ''}`,
+    fontWeight: `${availableWeights && availableWeights?.includes(fontWeight) ? fontWeight : 400}`,
+    fontStyle: `${fontItalic && availableItalics && availableItalics?.includes(fontWeight) ? 'italic' : ''}`,
     textAlign: `${textAlign}`,
     maxHeight: `${fontSize * 1.5}px`,
     minHeight: `${fontSize * 1.5}px`,

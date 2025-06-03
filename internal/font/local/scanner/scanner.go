@@ -32,21 +32,28 @@ func ScanFontFamilies(dir string) ([]lfm.FontFamily, error) {
 	for familyName, variants := range fontFamilyMap {
 
 		hasReadonly := false
-		italicWeigths := make([]int, 0)
+		italicWeights := make([]int, 0)
+		weights := make([]int, 0)
 
 		for _, variant := range variants {
 			if variant.Readonly {
 				hasReadonly = true
 			}
-			//todo
-			italicWeigths = append(italicWeigths)
 
+			weight := fontWeight(variant.VariantName)
+			if strings.Contains(strings.ToLower(variant.VariantName), "italic") {
+				italicWeights = append(italicWeights, weight)
+			} else {
+				weights = append(weights, weight)
+			}
 		}
 
 		fontFamilies = append(fontFamilies, lfm.FontFamily{
-			Name:        familyName,
-			Variants:    variants,
-			HasReadonly: hasReadonly,
+			Name:                   familyName,
+			Variants:               variants,
+			HasReadonly:            hasReadonly,
+			AvailableWeights:       weights,
+			AvailableItalicWeights: italicWeights,
 		})
 	}
 	return fontFamilies, nil
@@ -143,4 +150,30 @@ func parseFont(path string) (lfm.FontVariant, error) {
 		Path:        path,
 		Readonly:    strings.HasPrefix(path, "/usr/"),
 	}, nil
+}
+
+func fontWeight(variant string) int {
+	v := strings.ToLower(variant)
+	switch {
+	case strings.Contains(v, "thin"):
+		return 100
+	case strings.Contains(v, "extralight"), strings.Contains(v, "ultralight"):
+		return 200
+	case strings.Contains(v, "light"):
+		return 300
+	case strings.Contains(v, "regular"), strings.Contains(v, "normal"):
+		return 400
+	case strings.Contains(v, "medium"):
+		return 500
+	case strings.Contains(v, "semibold"), strings.Contains(v, "demibold"):
+		return 600
+	case strings.Contains(v, "bold"):
+		return 700
+	case strings.Contains(v, "extrabold"), strings.Contains(v, "ultrabold"), strings.Contains(v, "heavy"):
+		return 800
+	case strings.Contains(v, "black"), strings.Contains(v, "heavyblack"):
+		return 900
+	default:
+		return 400
+	}
 }
