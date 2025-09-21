@@ -1,0 +1,84 @@
+import FontSizeSlider from './FontSizeSlider'
+import FontWeightSlider from './FontWeightSlider'
+import FontLetterSpacingSlider from './LetterSpacingSlider'
+import BigInput from '@/components/BigInput'
+import CyclerButton from '@/components/CyclerButton'
+import IconSwitch from '@/components/IconSwitch'
+import useKeybind from '@/hooks/useKeybind'
+import useFontSettingsStore from '@/stores/useFontSettingsStore'
+import { AlignLeft, AlignRight, AlignCenter, Italic, Pencil } from 'lucide-react'
+import { ChangeEvent, memo, useCallback, useRef } from 'react'
+
+const ConfigPanel = () => {
+  const { textAlign, fontItalic, previewText, setFontItalic, setPreviewText, setTextAlign } =
+    useFontSettingsStore()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handlePreviewChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const val = e.target.value
+      setPreviewText(val)
+    },
+    [setPreviewText],
+  )
+
+  const handleItalicSwitch = (e: ChangeEvent<HTMLInputElement>) => {
+    setFontItalic(e.target.checked)
+  }
+
+  useKeybind(['Control', 'r'], () => {
+    inputRef.current?.focus()
+  })
+
+  const textAlignOptions = [
+    {
+      icon: <AlignLeft />,
+      value: 'left',
+    },
+    {
+      icon: <AlignCenter />,
+      value: 'center',
+    },
+    {
+      icon: <AlignRight />,
+      value: 'right',
+    },
+  ]
+
+  const handleTextAlignChange = (value: 'left' | 'center' | 'right') => {
+    setTextAlign(value)
+  }
+
+  return (
+    <div className="z-50 flex h-28 w-full flex-col justify-between bg-neutral-950 pt-1">
+      <div className="flex h-1/2 items-center gap-10 px-5">
+        <IconSwitch
+          icon={Italic}
+          onChange={handleItalicSwitch}
+          checked={fontItalic}
+        />
+        <CyclerButton
+          value={textAlign}
+          onChange={handleTextAlignChange}
+          options={textAlignOptions}
+        />
+        <FontSizeSlider />
+        <FontWeightSlider />
+        <FontLetterSpacingSlider />
+        <div className="flex items-center gap-2">
+          <button className="text-nowrap">Reset all</button>
+        </div>
+      </div>
+      <BigInput
+        ref={inputRef}
+        icon={Pencil}
+        onChange={handlePreviewChange}
+        value={previewText}
+        placeholder="Replace text"
+        className="h-14 min-h-14"
+      />
+    </div>
+  )
+}
+
+export default memo(ConfigPanel)
